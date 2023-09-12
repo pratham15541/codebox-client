@@ -1,0 +1,15 @@
+/* .sidebar {
+  background-color: #333;
+  color: white;
+  width: 50px; 
+  padding-top: 20px; 
+}
+ */
+.icon {
+  margin: 10px auto;
+  cursor: pointer;
+}
+
+.icon:hover {
+  color: #61dafb; /* Change the icon color on hover (you can customize it) */
+}

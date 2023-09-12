@@ -1,0 +1,19 @@
+.float_button {
+    cursor: pointer;
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+    background: #000;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.29);
+    padding: 0.2em;
+    position: fixed;
+    bottom: 2.5em;
+    right: 1em;
+  }
+  
+  .float_button {
+    cursor: pointer;
+    width: 2em;
+    height: 2em;
+  }

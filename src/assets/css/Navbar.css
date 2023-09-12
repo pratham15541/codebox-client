@@ -1,0 +1,26 @@
+.width-increasing-animation {
+  display: inline-block;
+  position: relative;
+}
+
+.width-increasing-animation::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #5ece84;
+  transition: width 0.3s ease-in-out;
+}
+
+.width-increasing-animation:hover::before {
+  width: 100%;
+}
+
+.navbar {
+  backdrop-filter: blur(10px); /* Add backdrop-filter to achieve transparency */
+  position: sticky;
+  top: 0;
+  z-index: 100; /* Set a higher z-index value to keep it on top */
+}

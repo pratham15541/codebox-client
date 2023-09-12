@@ -1,0 +1,15 @@
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
+    height: 100%;
+    width: 100%;
+  }
+  
+
+  
+  iframe {
+    height: 64vh;
+    width: 100%;
+    border-radius: 0.5rem;
+  }

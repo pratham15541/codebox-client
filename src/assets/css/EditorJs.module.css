@@ -1,0 +1,18 @@
+.editor {
+    min-width: 45vw !important;
+    max-width: 60vw !important;
+    margin: 0 auto !important;
+    
+  }
+  
+  .editor, 
+  .editor * {
+    font-family: consolas !important;
+    line-height: 1 !important;
+  }
+  
+  @media (max-width: 600px) {
+    .editor {
+      width: 100%;
+    }
+  }
