@@ -168,6 +168,7 @@ const LanguageSelector = () => {
     setSelectedLang(newSelectedLang);
     dispatch(setSelectedLanguage(newSelectedLang));
     toast.success(`Language changed successfully to ${newSelectedLang}!`); // Display toast message
+    // window.location.reload(); // Reload the page when language is changed
   };
 
   useEffect(() => {

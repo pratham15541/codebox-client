@@ -29,6 +29,7 @@ const OutputDiv = styled("div")({
 
 const PreFormattedText = styled("pre")({
   whiteSpace: "pre-wrap",
+  fontSize: ".95rem",
 });
 
 const Output = () => {
@@ -43,48 +44,20 @@ const Output = () => {
 
         {codeOutput?.stdout || codeOutput?.stderr || codeOutput?.error ? (
           <OutputDiv>
-            <p style={{ marginTop: "1rem", color: "#FFE569" }}>
+            <div style={{ marginTop: "1rem", color: "#FFE569" }}>
               StdOut:
-              <span
-                style={{
-                  marginLeft: ".5rem",
-                  color: "#B3FFAE",
-                  fontSize: ".95rem",
-                }}
-              >
-                <PreFormattedText>
-                  {codeOutput.stdout} {/* No need for replacement */}
-                </PreFormattedText>
-              </span>
-            </p>
-            <p style={{ marginTop: "1rem", color: "#F24C3D" }}>
+              <PreFormattedText style={{  color: "#B3FFAE",}}>
+                {codeOutput.stdout || ""} {/* No need for replacement */}
+              </PreFormattedText>
+            </div>
+            <div style={{ marginTop: "1rem", color: "#F24C3D" }}>
               StdErr:
-              <span
-                style={{
-                  marginLeft: ".5rem",
-                  color: "#dF8787 ",
-                  fontSize: ".9r5em",
-                }}
-              >
-                <PreFormattedText>
-                  {codeOutput.stderr || ""}
-                </PreFormattedText>
-              </span>
-            </p>
-            <p style={{ marginTop: "1rem", color: "#DB005B" }}>
+              <PreFormattedText style={{color: "#dF8787 "}}>{codeOutput.stderr || ""}</PreFormattedText>
+            </div>
+            <div style={{ marginTop: "1rem", color: "#DB005B" }}>
               Error:
-              <span
-                style={{
-                  marginLeft: ".5rem",
-                  color: "#fF8110",
-                  fontSize: ".95rem",
-                }}
-              >
-                <PreFormattedText>
-                  {codeOutput.error || ""}
-                </PreFormattedText>
-              </span>
-            </p>
+              <PreFormattedText style={{color: "#fF8110"}}>{codeOutput.error || ""}</PreFormattedText>
+            </div>
           </OutputDiv>
         ) : (
           <></>

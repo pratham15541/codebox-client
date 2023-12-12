@@ -28,6 +28,7 @@ const Run = ({ switchToOutputTab }) => {
             content: code,
           },
         ],
+        // command: `python3 main.${extension}`,
       };
 
       const headers = {

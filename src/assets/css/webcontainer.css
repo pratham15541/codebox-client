@@ -1,15 +1,15 @@
 .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem;
-    height: 100%;
-    width: 100%;
-  }
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px; /* Use a fraction of the available space for the gap */
+  height: 100%;
+  width: 100%;
+}
   
 
   
   iframe {
-    height: 64vh;
+    height: 64.1vh;
     width: 100%;
     border-radius: 0.5rem;
   }

@@ -12,11 +12,13 @@ const Terminals = () => {
     background: "#1E1E1E", // Background color
     boxSizing: "border-box", // Makes sure that padding does not increase the size
     marginTop: "-7px",
+    
   };
 
   return (
     <>
-      <ResizableBox width={1470} height={163}>
+      <ResizableBox width={1480} height={157} style={{top:0,left:-7.6,}}> 
+      {/* width={1480} height={163} */}
         <Box
           id="terminalEl"
           // overflow={"auto"}
@@ -27,6 +29,18 @@ const Terminals = () => {
           sx={boxStyle}
         >
           {/* Content of your terminal */}
+          <div className="search-box">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search in terminal"
+            style={{display:'none'}}
+          />
+          <button id="search-next">Next</button>
+          <button id="search-previous">Previous</button>
+          <button id="close-search">X</button>
+          <button id="scrollToTopBtn" title="Scroll to Top">↑</button>
+        </div>
         </Box>
       </ResizableBox>
     </>

@@ -87,6 +87,7 @@ const Navbar = () => {
 
   return (
     <AppBar
+    id="navbar"
       position="sticky"
       color="inherit"
       sx={{ borderBottom: 1, borderColor: "divider" ,width:'100vw'}}
@@ -131,6 +132,7 @@ const Navbar = () => {
             <Grid item>
               <Link
                 className="width-increasing-animation"
+                // target="_top"
                 to="/playground"
                 style={{
                   marginTop: "0.2rem",

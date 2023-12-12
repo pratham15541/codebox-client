@@ -56,6 +56,7 @@ const LeftIcons = ({ openFiletree, closeFiletree }) => {
         <Grid item>
           <VscFiles size={24} className="icon" title="Explorer" onClick={toggleFiletreeVisibility}   />
         </Grid>
+        
         {/* <Filetree open={isDrawerOpen} onClose={handleDrawerClose} /> */}
       {/* <Grid item>
         <SiPrettier size={24} className="icon" title="Format Code"  />

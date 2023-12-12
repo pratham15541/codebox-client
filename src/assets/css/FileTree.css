@@ -1,0 +1,106 @@
+.folder {
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .file {
+    cursor: pointer;
+    color: gray;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  li {
+    list-style: none;
+  }
+  
+  .icon{
+    padding-right: 5px;
+  }
+  
+  .search-box {
+    position: relative;
+  }
+  
+  #search-input {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 160px; /* Adjust the right value to provide space for buttons */
+    z-index: 1;
+    width: 150px; /* Adjust the width as needed */
+  }
+  
+  #search-next{
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 6.5rem; /* Adjust the right value to position next to the input box */
+    z-index: 1;
+    width: auto;
+    padding: 5px 10px; /* Add padding for better visibility */
+  }
+  #search-previous {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 30px; /* Adjust the right value to position next to the input box */
+    z-index: 1;
+    width: auto;
+    padding: 5px 10px; /* Add padding for better visibility */
+  }
+  #scrollToTopBtn {
+    position: absolute;
+    bottom: -9rem;
+    right: 23px; 
+    z-index: 1;
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    padding: 10px 15px; /* Adjust padding as needed */
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  #scrollToTopBtn:hover {
+    background-color: #0056b3; /* Button background color on hover */
+  }
+  
+  #close-search{
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px; /* Adjust the right value to position next to the input box */
+    z-index: 1;
+    width: auto;
+    padding: 5px 10px; /* Add padding for better visibility */
+  }
+  
+   #contextMenu {
+    display: none;
+    border: 1px solid red;
+    position: absolute;
+    margin-bottom: 5px;
+  }
+  
+  #contextMenu button {
+    display: block;
+    width: 100%;
+    /* border-bottom: 1px solid red; */
+    text-align: left;
+    padding: 5px;
+  }
+  
+  .active-folder {
+    background-color: rgba(159, 154, 154, 0.122); /* Set your desired background color for active folders */
+  }
+  
+  .active-file {
+    font-weight: bold; /* Set your desired style for active files */
+    color: #007bff; /* Set your desired color for active files */
+    /* background-color: rgb(244, 233, 233); */
+  }
+  
+  

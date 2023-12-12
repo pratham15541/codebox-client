@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Tabs, Tab, SvgIcon } from "@mui/material";
+import { Box, Tabs, Tab, SvgIcon ,useMediaQuery, useTheme} from "@mui/material";
 import { useSelector } from "react-redux";
 import LeftIcons from "./components/LeftIcons";
 import CodeEditor from "./components/CodeEditor";
@@ -15,20 +15,24 @@ const Editor = () => {
     (state) => state.languageSelector.langSelected
   );
   const [activeTab, setActiveTab] = useState("input");
-  const [isFiletreeOpen, setIsFiletreeOpen] = useState(false); // Add this state variable
+
   const [isFiletreeVisible, setIsFiletreeVisible] = useState(false); // Define isFiletreeVisible here
 
   const openFiletree = () => {
     setIsFiletreeVisible(true); // Set isFiletreeVisible to true when opening
-    setIsFiletreeOpen(true);
   };
 
   const closeFiletree = () => {
     setIsFiletreeVisible(false); // Set isFiletreeVisible to false when closing
-    setIsFiletreeOpen(false);
   };
 
-
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // Adjust the breakpoint as needed
+  const isJavaScriptLanguage = selectedLanguage === "javascript";
+  const flexDirection =
+    isSmallScreen || (isJavaScriptLanguage || window.innerWidth < 780)
+      ? "column"
+      : "row";
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -46,7 +50,7 @@ const Editor = () => {
           <LeftIcons openFiletree={openFiletree} closeFiletree={closeFiletree} />
         </Box>
 
-        <Box display="flex" flexDirection={{ xs: "column", xl: selectedLanguage === 'javascript' ? "column" :'row' }}>
+        <Box display="flex" flexDirection={flexDirection}>
           {/* Middle Section */}
           <Box
             flex="1"
@@ -55,7 +59,7 @@ const Editor = () => {
           >
             {/* File Tree */}
             <Box>
-            {isFiletreeOpen && isFiletreeVisible && <Filetree />}
+            { isFiletreeVisible ? <Filetree display={'block'} /> : <Filetree display={'none'} />}
             </Box>
             
 

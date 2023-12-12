@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
+import million from 'million/compiler'
 import react from "@vitejs/plugin-react-swc";
 import dynamicImport from "vite-plugin-dynamic-import";
 import topLevelAwait from "vite-plugin-top-level-await";
@@ -7,7 +8,7 @@ import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), dynamicImport(),
+  plugins: [million.vite({ auto: true }),react(), dynamicImport(),
     topLevelAwait({
       // The export name of top-level await promise for each chunk module
       promiseExportName: "__tla",

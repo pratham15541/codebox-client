@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const editorSelectorSlice = createSlice({
   name: "editorSelector",
   initialState: {
-    editorSelected: localStorage.getItem("editorSelector") || "codemirror",
+    editorSelected: localStorage.getItem("editorSelector") || "ace",
   },
   reducers: {
     setSelectedEditor: (state, action) => {

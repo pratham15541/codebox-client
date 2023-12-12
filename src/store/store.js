@@ -7,6 +7,7 @@ import codeSliceReducer from "./slices/codeSlice";
 import codeInputReducer from "./slices/codeInputSlice";
 import codeOutputReducer from "./slices/codeOutputSlice";
 import webContainerReducer from './slices/webcontainerSlice';
+import muiDataReducer from './slices/muiDataSlice'
 
 const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
     codeInput: codeInputReducer,
     codeOutput: codeOutputReducer,
     webContainerInstance: webContainerReducer,
+    muiData: muiDataReducer,
   },
 });
 

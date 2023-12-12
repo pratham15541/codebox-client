@@ -3,6 +3,7 @@ import React from "react";
 
 const Footer = () => {
   return (
+    <footer id="footer">
     <Paper
       sx={{
         width: "100%",
@@ -13,6 +14,7 @@ const Footer = () => {
     >
       Footer 
     </Paper>
+    </footer>
   );
 };
 
