@@ -6,6 +6,7 @@ import { runnerUrl } from "../../../App";
 import { setCodeOutput } from "../../../store/slices/codeOutputSlice";
 import { langExtensions } from "../../../utils/langExtensions";
 import { ToastContainer, toast } from "react-toastify";
+import {commands} from '../../../constants/command'
 
 const Run = ({ switchToOutputTab }) => {
   const dispatch = useDispatch();
@@ -13,6 +14,7 @@ const Run = ({ switchToOutputTab }) => {
   const code = useSelector((state) => state.code.codeStore);
   const language = useSelector((state) => state.languageSelector.langSelected);
   const input = useSelector((state) => state.codeInput.codeInput);
+  const commandInput = useSelector((state) => state.codeCommand.codeCommand);
 
   const extension = langExtensions[language];
 
@@ -21,14 +23,9 @@ const Run = ({ switchToOutputTab }) => {
     try {
       setExecutionInProgress(true);
       const Axdata = {
+        files: code,
         stdin: input || "",
-        files: [
-          {
-            name: `main.${extension}`,
-            content: code,
-          },
-        ],
-        // command: `python3 main.${extension}`,
+        command:commandInput || commands[language],
       };
 
       const headers = {

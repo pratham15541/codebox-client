@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setCodeForStore } from "../../../store/slices/codeSlice";
+// import { setCodeForStore } from "../../../store/slices/codeSlice";
 import ace from "ace-builds/src-noconflict/ace";
 import Settings from "./Settings";
 import styles from "../../../assets/css/Editor.module.css";
-import style from "../../../assets/css/EditorJs.module.css";
-import { workerModules } from "../../../constants/workers";
-import * as modes from "../../../constants/language";
-import * as themes from "../../../constants/themes";
-import * as snippets from "../../../constants/snippets";
-import * as ext from "../../../constants/ext";
-import * as keybindings from "../../../constants/keybinding";
+// import style from "../../../assets/css/EditorJs.module.css";
+// import { workerModules } from "../../../constants/workers";
+// import * as modes from "../../../constants/language";
+// import * as themes from "../../../constants/themes";
+// import * as snippets from "../../../constants/snippets";
+// import * as ext from "../../../constants/ext";
+// import * as keybindings from "../../../constants/keybinding";
 // import "../../../utils/Webcontainer";
 import "../../../assets/css/webcontainer.css";
 
@@ -25,10 +25,9 @@ const CodeEditor = () => {
     (state) => state.languageSelector.langSelected
   );
 
-  const [isCustomSettingsDrawerOpen, setIsCustomSettingsDrawerOpen] =
-    useState(false);
+  const [isCustomSettingsDrawerOpen, setIsCustomSettingsDrawerOpen] = useState(false);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const editorRef = useRef(null); // Ref to store the editor instance
 
   // useEffect(async() => {
@@ -46,23 +45,23 @@ const CodeEditor = () => {
     try {
       editorInstance = ace.edit("editor"); // Assign the editor instance to the module-level variable
       editorInstance.setTheme(`ace/theme/${selectedTheme}`);
-      const selectedAceLanguage = modes.languageMappings[selectedLanguage];
-      const selectedWorkerModule = workerModules[selectedAceLanguage];
-      // if(selectedAceLanguage !== 'javascript'){
-      if (selectedAceLanguage in workerModules) {
-        selectedWorkerModule.then((module) => {
-          ace.config.setModuleUrl(
-            `ace/mode/${selectedAceLanguage}_worker`,
-            module.default
-          );
-          editorInstance.session.setMode(`ace/mode/${selectedAceLanguage}`);
-        });
-      } else {
-        editorInstance.session.setMode(`ace/mode/${selectedAceLanguage}`);
-      }
-
+      // const selectedAceLanguage = modes.languageMappings[selectedLanguage];
+      // const selectedWorkerModule = workerModules[selectedAceLanguage];
+      // // if(selectedAceLanguage !== 'javascript'){
+      // if (selectedAceLanguage in workerModules) {
+      //   selectedWorkerModule.then((module) => {
+      //     ace.config.setModuleUrl(
+      //       `ace/mode/${selectedAceLanguage}_worker`,
+      //       module.default
+      //     );
+      //     editorInstance.session.setMode(`ace/mode/${selectedAceLanguage}`);
+      //   });
+      // } else {
+      //   editorInstance.session.setMode(`ace/mode/${selectedAceLanguage}`);
       // }
-      editorInstance.setValue(""); // Set initial content here if needed
+
+      // // }
+      // editorInstance.setValue(""); // Set initial content here if needed
 
       editorInstance.container.style.resize = "horizontal";
       document.addEventListener("mouseup", (e) => editorInstance.resize());
@@ -76,15 +75,16 @@ const CodeEditor = () => {
         showLineNumbers: true,
         tabSize: 2,
       });
-      editorInstance.on("change", (e) => {
-        dispatch(setCodeForStore(editorInstance.getValue()));
-      });
+      // editorInstance.on("change", (e) => {
+      //   dispatch(setCodeForStore(editorInstance.getValue()));
+      // });
       editorRef.current = editorInstance; // Store the editor instance in the ref
-
+      
       async function loadCodeExample() {
         try {
           const codeExampleModule = await import(
-            `../../../codeExample/${selectedLanguage}.js`
+            //       `../../../codeExample/${selectedLanguage}.js`
+            `../../../codeExample/plaintext.js`
           );
           const codeExample = codeExampleModule.default;
           editorInstance.setValue(codeExample);
@@ -93,7 +93,7 @@ const CodeEditor = () => {
         }
       }
 
-      // loadCodeExample(); // Load code example when component mounts
+      loadCodeExample(); // Load code example when component mounts 
 
       return () => {
         // editorInstance.destroy();
@@ -103,11 +103,7 @@ const CodeEditor = () => {
     }
   }, [selectedLanguage]);
 
-  const handleCodeChange = (newCode) => {
-    if (editorRef.current) {
-      editorRef.current.setValue(newCode);
-    }
-  };
+ 
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -119,7 +115,7 @@ const CodeEditor = () => {
 
   const handleKeyDown = (event) => {
     // Check if Ctrl (or Command on macOS) and , are pressed simultaneously
-    if ((event.ctrlKey || event.metaKey) && event.key === ",") {
+    if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === "S") {
       event.preventDefault(); // Prevent the default behavior (Ace Editor settings)
       // Open your custom settings drawer
       setIsCustomSettingsDrawerOpen(true);
@@ -141,7 +137,7 @@ const CodeEditor = () => {
                 fontFamily: "consolas !important",
                 lineHeight: "1 !important",
               }}
-              onChange={handleCodeChange}
+              
             ></div>
             <div className="preview">
               
@@ -163,7 +159,7 @@ const CodeEditor = () => {
                 lineHeight: "1 !important",
                 overflowX: "auto",
               }}
-              onChange={handleCodeChange}
+              
             ></div>
           </div>
         </>

@@ -220,7 +220,7 @@ export const guileFiles = {
 }
 
 export const hareFiles = {
-  "main.hare": {
+  "main.ha": {
     "file": {
       "contents": "module Main where\n\nmain = putStrLn \"Hello World!\""
     }

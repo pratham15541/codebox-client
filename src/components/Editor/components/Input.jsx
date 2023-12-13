@@ -1,10 +1,15 @@
 import React from "react";
-import { TextareaAutosize } from "@mui/material";
+import { TextareaAutosize, Input as I, Box } from "@mui/material";
 import { styled } from "@mui/system";
-import {setCodeInput} from '../../../store/slices/codeInputSlice'
-import { useDispatch } from "react-redux";
+import { setCodeInput } from "../../../store/slices/codeInputSlice";
+import { setcodeCommand } from '../../../store/slices/codeCommandSlice'
+import { useDispatch, useSelector } from "react-redux";
+import {commands} from '../../../constants/command'
 
 const TextAreaContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  position: "relative",
   minWidth: "90%",
   width: "25rem",
   maxWidth: "100%",
@@ -23,15 +28,30 @@ const TextArea = styled(TextareaAutosize)({
 });
 
 const Input = () => {
-  const dispatch = useDispatch()
-const handleChangeInput = (event) => {
-  const newInput = event.target.value;
+  const selectedLanguage = useSelector(
+    (state) => state.languageSelector.langSelected
+  );
+  const dispatch = useDispatch();
+  const handleChangeInput = (event) => {
+    const newInput = event.target.value;
     dispatch(setCodeInput(newInput));
-};
+  };
+
+  const handleCommandChange = (event) => {
+    const newCommand = event.target.value;
+    dispatch(setcodeCommand(newCommand))
+  }
 
   return (
     <TextAreaContainer>
-      <TextArea placeholder="Please enter an input" onChange={handleChangeInput} />
+      <TextArea
+        placeholder="Please enter an input"
+        onChange={handleChangeInput}
+      />
+      <I style={{
+        color:'#fff',
+        fontFamily: "monospace",
+      }} type="text" placeholder={`Custom Command Ex: ${commands[selectedLanguage]}`} onChange={handleCommandChange} />
     </TextAreaContainer>
   );
 };

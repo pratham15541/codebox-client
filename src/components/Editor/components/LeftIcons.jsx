@@ -67,6 +67,7 @@ const LeftIcons = ({ openFiletree, closeFiletree }) => {
         <VscSettingsGear
           size={24}
           className="icon"
+          title="Settings (Ctrl + Shift + S)"
           onClick={handleDrawerOpen}
         />
       </Grid>
