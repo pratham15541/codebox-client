@@ -80,14 +80,20 @@
 //ACE
 
 import React, { useState } from "react";
-import { Select, MenuItem, InputLabel, FormControl } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  ListSubheader,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedThemes } from "../../../store/slices/themeSelectorSlice";
 import { styled } from "@mui/system";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import * as themes from "../../../constants/themes";
-
+import { Themes } from "../../../constants/themes";
 const FormControlWrapper = styled(FormControl)({
   display: "flex",
   flexDirection: "row",
@@ -105,7 +111,7 @@ const ThemeSelector = () => {
   const dispatch = useDispatch();
 
   const [selectedTheme, setSelectedTheme] = useState(
-    selectedThemePrevious || "monokai"   
+    selectedThemePrevious || "monokai"
   );
 
   const handleThemeChange = (theme) => {
@@ -128,11 +134,19 @@ const ThemeSelector = () => {
             sx={{ minWidth: 200, maxWidth: 200 }}
             id="themeSelector"
           >
-            {Object.keys(themes).map((theme) => (
+            <ListSubheader>Bright</ListSubheader>
+            {Object.keys(themes.Themes.Bright).map((theme) => (
               <MenuItem key={theme} value={theme}>
                 {theme}
               </MenuItem>
             ))}
+            <ListSubheader>Dark</ListSubheader>
+            {Object.keys(themes.Themes.Dark).map((theme) => (
+              <MenuItem key={theme} value={theme}>
+                {theme}
+              </MenuItem>
+            ))}
+ 
           </Select>
         </FormControlWrapper>
         <ToastContainer

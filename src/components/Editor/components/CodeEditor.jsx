@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // import { setCodeForStore } from "../../../store/slices/codeSlice";
-import ace from "ace-builds/src-noconflict/ace";
+import ace from "ace-builds/src-min-noconflict/ace";
 import Settings from "./Settings";
 import styles from "../../../assets/css/Editor.module.css";
 // import style from "../../../assets/css/EditorJs.module.css";
@@ -15,16 +15,16 @@ import styles from "../../../assets/css/Editor.module.css";
 import "../../../assets/css/webcontainer.css";
 
 // Declare a module-level variable to store the editor instance
-let editorInstance;
 
 const CodeEditor = () => {
   const selectedTheme = useSelector(
     (state) => state.themeSelector.selectedTheme
-  );
-  const selectedLanguage = useSelector(
-    (state) => state.languageSelector.langSelected
-  );
-
+    );
+    const selectedLanguage = useSelector(
+      (state) => state.languageSelector.langSelected
+      );
+      
+      let editorInstance;
   const [isCustomSettingsDrawerOpen, setIsCustomSettingsDrawerOpen] = useState(false);
 
   // const dispatch = useDispatch();
@@ -66,14 +66,17 @@ const CodeEditor = () => {
       editorInstance.container.style.resize = "horizontal";
       document.addEventListener("mouseup", (e) => editorInstance.resize());
 
+      const fontSizeLocal = localStorage.getItem("fontSize");
+
       editorInstance.setOptions({
-        fontSize: "14px",
+        fontSize:  fontSizeLocal ? `${fontSizeLocal}px` : '14px',
         showPrintMargin: false,
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
         enableSnippets: true,
         showLineNumbers: true,
         tabSize: 2,
+        wrap: true,
       });
       // editorInstance.on("change", (e) => {
       //   dispatch(setCodeForStore(editorInstance.getValue()));

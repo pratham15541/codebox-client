@@ -92,7 +92,7 @@ export const cFiles = {
 }
 
 export const clispFiles = {
-  "main.lisp": {
+  "main.lsp": {
     "file": {
       "contents": "(format t \"Hello World!\")"
     }
@@ -110,7 +110,7 @@ export const clojureFiles = {
 export const cobolFiles = {
   "main.cob": {
     "file": {
-      "contents": "IDENTIFICATION DIVISION.\nPROGRAM-ID. HELLO-WORLD.\nPROCEDURE DIVISION.\nDISPLAY \"Hello World!\".\nSTOP RUN."
+      "contents": "       IDENTIFICATION DIVISION.\n       PROGRAM-ID. hello.\n\n       PROCEDURE DIVISION.\n           DISPLAY 'Hello World!'\n           GOBACK\n           .\n\n"
     }
   }
 }
@@ -164,7 +164,7 @@ export const dartFiles = {
 }
 
 export const elixirFiles = {
-  "main.exs": {
+  "main.ex": {
     "file": {
       "contents": "IO.puts \"Hello World!\""
     }
@@ -172,9 +172,9 @@ export const elixirFiles = {
 }
 
 export const elmFiles = {
-  "main.elm": {
+  "Main.elm": {
     "file": {
-      "contents": "main =\n  Html.text \"Hello World!\""
+      "contents": "module Main exposing (main)\n\nimport Html exposing (..)\n\nmain =\n    text \"Hello World!\"\n"
     }
   }
 }
@@ -182,7 +182,7 @@ export const elmFiles = {
 export const erlangFiles = {
   "main.erl": {
     "file": {
-      "contents": "main(_) ->\n    io:fwrite(\"Hello World!\n\")."
+      "contents": "% escript will ignore the first line\n\nmain(_) ->\n    io:format(\"Hello World!~n\").\n"
     }
   }
 }
@@ -198,7 +198,7 @@ export const fsharpFiles = {
 export const goFiles = {
   "main.go": {
     "file": {
-      "contents": "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello World!\")\n}"
+      "contents": "package main\n\nimport (\n    \"fmt\"\n)\n\nfunc main() {\n    fmt.Println(\"Hello World!\")\n}\n"
     }
   }
 }
@@ -214,7 +214,7 @@ export const groovyFiles = {
 export const guileFiles = {
   "main.scm": {
     "file": {
-      "contents": "(display \"Hello World!\")(newline)"
+      "contents": "(display \"Hello World!\")"
     }
   }
 }
@@ -222,7 +222,7 @@ export const guileFiles = {
 export const hareFiles = {
   "main.ha": {
     "file": {
-      "contents": "module Main where\n\nmain = putStrLn \"Hello World!\""
+      "contents": "use fmt;\n\nexport fn main() void = {\n\tfmt::println(\"Hello World!\")!;\n};\n"
     }
   }
 }
@@ -276,9 +276,9 @@ export const juliaFiles = {
 }
 
 export const kotlinFiles = {
-  "Main.kt": {
+  "main.kt": {
     "file": {
-      "contents": "fun main() {\n    println(\"Hello World!\")\n}"
+      "contents": "fun main(){\n    println(\"Hello World!\")\n}\n"
     }
   }
 }
@@ -310,7 +310,7 @@ export const nimFiles = {
 export const nixFiles = {
   "main.nix": {
     "file": {
-      "contents": "builtins.trace \"Hello World!\" \"\""
+      "contents": "let\n    hello = \"Hello World!\";\nin\nhello\n"
     }
   }
 }
@@ -324,9 +324,9 @@ export const ocamlFiles = {
 }
 
 export const pascalFiles = {
-  "main.pas": {
+  "main.pp": {
     "file": {
-      "contents": "program HelloWorld;\nbegin\n    writeln ('Hello World!')\nend."
+      "contents": "Program Main;\n\nbegin\n  writeln('Hello World!');\nend.\n"
     }
   }
 }
@@ -390,13 +390,13 @@ export const rustFiles = {
 export const sacFiles = {
   "main.sac": {
     "file": {
-      "contents": "main\n  stdout(\"Hello World!\")"
+      "contents": "int main () {\n    StdIO::printf (\"Hello World!\");\n    return 0;\n}"
     }
   }
 }
 
 export const scalaFiles = {
-  "Main.scala": {
+  "main.scala": {
     "file": {
       "contents": "object Main extends App {\n    println(\"Hello World!\")\n}"
     }
@@ -422,7 +422,7 @@ export const typescriptFiles = {
 export const zigFiles = {
   "main.zig": {
     "file": {
-      "contents": "const std = @import(\"std\");\n\npub fn main() !void {\n    const stdout = std.io.getStdOut().writer();\n    try stdout.print(\"Hello World!\\n\");\n    defer stdout.flush();\n}"
+     "contents": "const std = @import(\"std\");\n\npub fn main() !void {\n    const stdout = std.io.getStdOut().writer();\n    try stdout.print(\"{s}\\n\", .{\"Hello World!\\n\"});\n}\n"
     }
   }
 }

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setThemeMode } from "../../store/slices/themeSlice";
+import axios from "axios";
 import {
   AppBar,
   IconButton,
@@ -16,6 +17,8 @@ import {
   Box,
   Hidden,
   Divider,
+  MenuItem,
+  Menu,
 } from "@mui/material";
 import { RiReactjsLine, RiMenu2Fill, RiCloseFill } from "react-icons/ri";
 import { FiSun, FiMoon } from "react-icons/fi";
@@ -23,6 +26,10 @@ import { IconContext } from "react-icons";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import "../../assets/css/Navbar.css";
+import useFetch from "../../hooks/fetch.hook";
+import UserAvatar from "../../assets/images/avatar.png";
+import { getUsernameFromToken } from "../../helpers/helper";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LoginButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -73,6 +80,34 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const themeMode = useSelector((state) => state.theme.mode);
   const theme = useTheme();
+  const serverLink = import.meta.env.VITE_SERVER_DOMAIN;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isUser, setIsUser] = useState();
+  const [imageUrl, setImageUrl] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [role, setRole] = useState(null);
+
+  // Use useEffect to force a re-render when the authentication state changes
+  useEffect(() => {
+    async function fetchData() {
+      const tokenInfo = getUsernameFromToken();
+      const username = tokenInfo ? tokenInfo.username : null;
+      setRole(tokenInfo ? tokenInfo.role : null);
+      setIsUser(username);
+      if (username) {
+        const { data } = await axios.get(`${serverLink}/api/user/${username}`);
+
+        setImageUrl(
+          data?.others.profile
+            ? (serverLink + "/" + data?.others.profile).replace(/\\/g, "/")
+            : UserAvatar
+        );
+      }
+      // console.log(userdata);
+    }
+    fetchData();
+  }, [location]);
 
   const [open, setOpen] = useState(false);
 
@@ -85,12 +120,27 @@ const Navbar = () => {
     dispatch(setThemeMode(newTheme));
   };
 
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function logoutHandler() {
+    localStorage.removeItem("token");
+    handleClose();
+    console.log("logout success");
+    navigate("/signin");
+  }
+
   return (
     <AppBar
-    id="navbar"
+      id="navbar"
       position="sticky"
       color="inherit"
-      sx={{ borderBottom: 1, borderColor: "divider" ,width:'100vw'}}
+      sx={{ borderBottom: 1, borderColor: "divider", width: "100vw" }}
     >
       <Toolbar>
         <Grid container alignItems="center" spacing={2}>
@@ -104,12 +154,33 @@ const Navbar = () => {
             </Link>
           </Grid>
           <Hidden smDown>
-            <Grid item marginLeft={2} />
+            <Grid item marginLeft={1} />
           </Hidden>
           <Hidden smUp>
             <Grid item xs />
           </Hidden>
           <Hidden smDown>
+            {role === "admin" ? (
+              <Grid item>
+                <Link
+                  className="width-increasing-animation"
+                  to="/admin"
+                  style={{
+                    marginTop: "0.2rem",
+                    textDecoration: "none",
+                    color:
+                      theme.palette.mode === "dark"
+                        ? theme.palette.common.white
+                        : theme.palette.grey[900],
+                  }}
+                >
+                  <Typography variant="h6" component="div">
+                    Dashboard
+                  </Typography>
+                </Link>
+              </Grid>
+            ) : null}
+
             <Grid item>
               <Link
                 className="width-increasing-animation"
@@ -149,16 +220,61 @@ const Navbar = () => {
               </Link>
             </Grid>
             <Grid item xs />
-            <Grid item>
-              <Link to="/login" style={{ textDecoration: "none" }}>
-                <LoginButton variant="outlined">Login</LoginButton>
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link to="/signup" style={{ textDecoration: "none" }}>
-                <SignupButton variant="contained">Sign Up</SignupButton>
-              </Link>
-            </Grid>
+            {!isUser ? (
+              <>
+                <Grid item>
+                  <Link to="/signin" style={{ textDecoration: "none" }}>
+                    <LoginButton variant="outlined">Login</LoginButton>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link to="/signup" style={{ textDecoration: "none" }}>
+                    <SignupButton variant="contained">Sign Up</SignupButton>
+                  </Link>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item>
+                  {/* <Link to="/profile" style={{ textDecoration: "none" }}> */}
+                  <img
+                    src={imageUrl}
+                    crossOrigin="anonymous"
+                    alt="user avatar"
+                    onClick={handleMenu}
+                    style={{
+                      width: "35px",
+                      height: "35px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                    }}
+                  />
+                  {/* </Link> */}
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <Link to={"/profile"}>
+                      {" "}
+                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    </Link>
+                    <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+                  </Menu>
+                </Grid>
+              </>
+            )}
           </Hidden>
           <Grid item>
             <IconButton color="inherit" onClick={handleThemeToggle}>
@@ -203,6 +319,26 @@ const Navbar = () => {
               <RiCloseFill />
             </IconButton>
           </Box>
+          {role === "admin" ? (
+            <>
+              <ListItem
+                button
+                component={Link}
+                to="/admin"
+                onClick={handleToggleDrawer}
+              >
+                <ListItemText>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    className="width-increasing-animation"
+                  >
+                    Dashboard
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+            </>
+          ) : null}
           <ListItem
             button
             component={Link}
@@ -242,22 +378,46 @@ const Navbar = () => {
               marginBottom: "1rem",
             }}
           />
-          <ListItem
-            button
-            component={Link}
-            to="/login"
-            onClick={handleToggleDrawer}
-          >
-            <ListItemText primary="Login" />
-          </ListItem>
-          <ListItem
-            button
-            component={Link}
-            to="/signup"
-            onClick={handleToggleDrawer}
-          >
-            <ListItemText primary="Sign Up" />
-          </ListItem>
+          {!isUser ? (
+            <>
+              <ListItem
+                button
+                component={Link}
+                to="/signin"
+                onClick={handleToggleDrawer}
+              >
+                <ListItemText primary="Login" />
+              </ListItem>
+              <ListItem
+                button
+                component={Link}
+                to="/signup"
+                onClick={handleToggleDrawer}
+              >
+                <ListItemText primary="Sign Up" />
+              </ListItem>
+            </>
+          ) : (
+            <>
+              <ListItem
+                component={Link}
+                to="/profile"
+                style={{ textDecoration: "none" }}
+              >
+                <img
+                  src={imageUrl}
+                  crossOrigin="anonymous"
+                  alt="user avatar"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+              </ListItem>
+            </>
+          )}
         </List>
       </Drawer>
     </AppBar>

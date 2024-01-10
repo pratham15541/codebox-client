@@ -17,8 +17,8 @@ export const erlang = await import("ace-builds/src-min-noconflict/mode-erlang")
 export const fsharp = await import("ace-builds/src-min-noconflict/mode-fsharp")
 export const go = await import("ace-builds/src-min-noconflict/mode-golang")
 export const groovy = await import("ace-builds/src-min-noconflict/mode-groovy")
-export const guile = await import("ace-builds/src-min-noconflict/mode-plain_text")
-export const hare = await import("ace-builds/src-min-noconflict/mode-haskell_cabal")
+export const guile = await import("ace-builds/src-min-noconflict/mode-scheme")
+export const hare = await import("ace-builds/src-min-noconflict/mode-plain_text")
 export const haskell = await import("ace-builds/src-min-noconflict/mode-haskell")
 export const html = await import("ace-builds/src-min-noconflict/mode-html")
 export const idris = await import("ace-builds/src-min-noconflict/mode-plain_text")
@@ -112,13 +112,14 @@ export const languageExtension ={
   asm: "assembly_x86",
   dats: "plain_text",
   bat: "batchfile",
+  sh:'batchfile',
   c: "c_cpp",
-  cl: "lisp",
+  lsp: "lisp",  
   clj: "clojure",
   cob: "cobol",
   coffee: "coffee",
   cpp: "c_cpp",
-  crystal: "crystal",
+  cr: "crystal",
   cs: "csharp",
   d: "d",
   dart: "dart",
@@ -128,21 +129,21 @@ export const languageExtension ={
   fs: "fsharp",
   go: "golang",
   groovy: "groovy",
-  scm: "plain_text",
-  hs: "haskell_cabal",
-  haskell: "haskell",
+  scm: "scheme",
+  ha: "plain_text",
+  hs: "haskell",
   html: "html",
   idr: "plain_text",
   java: "java",
   js: "javascript",
-  julia: "julia",
+  jl: "julia",
   kt: "kotlin",
   lua: "lua",
   mercury: "plain_text",
   nim: "nim",
   nix: "nix",
   ml: "ocaml",
-  pascal: "pascal",
+  pp: "pascal",
   pl: "perl",
   php: "php",
   txt: "plain_text",

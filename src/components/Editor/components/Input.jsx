@@ -48,10 +48,12 @@ const Input = () => {
         placeholder="Please enter an input"
         onChange={handleChangeInput}
       />
-      <I style={{
-        color:'#fff',
-        fontFamily: "monospace",
-      }} type="text" placeholder={`Custom Command Ex: ${commands[selectedLanguage]}`} onChange={handleCommandChange} />
+      {
+        (selectedLanguage == 'go' || selectedLanguage == 'clojure' || selectedLanguage == 'ats') ? '' : <I style={{
+          color:'#fff',
+          fontFamily: "monospace",
+        }} type="text" placeholder={`Custom Command Ex: ${commands[selectedLanguage]}`} onChange={handleCommandChange} />
+      }
     </TextAreaContainer>
   );
 };

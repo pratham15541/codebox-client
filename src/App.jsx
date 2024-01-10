@@ -15,9 +15,7 @@ function App() {
   const dispatch = useDispatch();
   const themeMode = useSelector((state) => state.theme.mode);
 
-    // Add the popstate event listener here
-
-  
+ 
 
   useEffect(() => {
     const storedThemeMode = localStorage.getItem("themeMode");

@@ -25,7 +25,7 @@ const Run = ({ switchToOutputTab }) => {
       const Axdata = {
         files: code,
         stdin: input || "",
-        command:commandInput || commands[language],
+        command:(language == 'go' || language == 'clojure' || language == 'ats')? '' :commandInput || commands[language],
       };
 
       const headers = {

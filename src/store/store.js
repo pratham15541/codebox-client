@@ -9,6 +9,8 @@ import codeOutputReducer from "./slices/codeOutputSlice";
 import webContainerReducer from './slices/webcontainerSlice';
 import muiDataReducer from './slices/muiDataSlice'
 import codeCommandReducer from './slices/codeCommandSlice'
+import authReducer from './slices/userAuthSlice'
+import tokenReducer from './slices/userTokenSlice'
 
 const store = configureStore({
   reducer: {
@@ -22,6 +24,8 @@ const store = configureStore({
     codeCommand: codeCommandReducer,
     webContainerInstance: webContainerReducer,
     muiData: muiDataReducer,
+    auth:authReducer,
+    token:tokenReducer,
   },
 });
 

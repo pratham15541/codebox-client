@@ -6,7 +6,7 @@ import { Grid } from "@mui/material";
 import {styled} from '@mui/system'
 import "../../../assets/css/LeftIcons.css"; // Custom CSS for styling the sidebar
 import Settings from "./Settings";
-import Filetree from "./Filetree";
+
 
 const MyStyledGrid = styled(Grid)({
   backgroundColor: '#333',
@@ -18,8 +18,10 @@ const MyStyledGrid = styled(Grid)({
 
 const LeftIcons = ({ openFiletree, closeFiletree }) => {
   const themeMode = useSelector((state) => state.theme.mode);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const selectedLanguage = useSelector(
+    (state) => state.languageSelector.langSelected
+    );
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isFiletreeVisible, setIsFiletreeVisible] = useState(false);
 
   const toggleFiletreeVisibility = () => {
@@ -58,9 +60,11 @@ const LeftIcons = ({ openFiletree, closeFiletree }) => {
         </Grid>
         
         {/* <Filetree open={isDrawerOpen} onClose={handleDrawerClose} /> */}
-      {/* <Grid item>
-        <SiPrettier size={24} className="icon" title="Format Code"  />
-      </Grid> */}
+  {
+    (selectedLanguage == 'javascript' || selectedLanguage == 'typescript') ?     <Grid item>
+    <SiPrettier size={24} className="icon" title="Format Code" id="formatCode" />
+  </Grid>:''
+  }
 
       {/* Settings Icon */}
       <Grid item sx={{ marginTop: "auto", marginBottom: "1rem" }}>

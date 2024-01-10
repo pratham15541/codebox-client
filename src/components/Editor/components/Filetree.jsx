@@ -5,8 +5,6 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { BsChevronRight, BsChevronDown } from "react-icons/bs";
 import { AiFillFolder, AiFillFolderOpen } from "react-icons/ai";
 import { ResizableBox } from "react-resizable";
-import { TreeView } from "@mui/x-tree-view/TreeView";
-import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useSelector } from "react-redux";
 import "../../../assets/css/react-resizable.css";
 

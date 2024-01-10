@@ -8,7 +8,7 @@ import topLevelAwait from "vite-plugin-top-level-await";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [million.vite({ auto: true }),react(), dynamicImport(),
+  plugins: [million.vite({ auto: true, mute:true }),react(), dynamicImport(),
     topLevelAwait({
       // The export name of top-level await promise for each chunk module
       promiseExportName: "__tla",

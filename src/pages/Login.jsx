@@ -1,11 +1,12 @@
 import React from "react";
 import SEO from "../seo/Seo";
+import Username from "../components/Auth/Username";
 
 const Login = () => {
   return (
     <>
-      <SEO title="Login" description="Login" name="Login" type="Website" />
-      <div>Login</div>
+      <SEO title="CodeBox - Login" description="CodeBox - Login" name="CodeBox - Login" type="Website" />
+      <Username />
     </>
   );
 };
