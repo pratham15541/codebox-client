@@ -153,7 +153,6 @@ const User = () => {
     rowsPerPageText: "Rows per page:",
     rangeSeparatorText: "of",
     selectAllRowsItem: true,
-    sortactive: true, // Use it as a custom attribute with lowercase name
   }}
 />
     </div>

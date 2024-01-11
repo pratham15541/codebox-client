@@ -37,9 +37,11 @@ export const ProtectedRoute = ({ children }) => {
 };
 
 export const AdminRoute = ({ children }) => {
-  const {role} = getUsernameFromToken()
-  if(role !== 'admin'){
+  const user = getUsernameFromToken();
+
+  if (user && user.role && user.role !== 'admin') {
     return <Navigate to="/" replace={true} />;
   }
+  
   return children;
 }
