@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { WebContainer } from "@webcontainer/api";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
@@ -28,6 +28,9 @@ import * as file from "../files/files";
 // import * as prettier from "https://unpkg.com/prettier@3.1.1/standalone.mjs";
 import * as prettier from "prettier/standalone.mjs";
 import { prettierPlugins, parsers } from "../constants/prettierPlugins";
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 // Declare variables for DOM elements and WebContainer instance
 let webcontainerInstance = null;
@@ -93,13 +96,14 @@ git install
 // },5000)
 
 const Webcontainer = () => {
+
   const location = useLocation();
   dispatch = useDispatch();
   selectedLanguage = useSelector(
     (state) => state.languageSelector.langSelected
   );
   selectedTheme = useSelector((state) => state.themeSelector.selectedTheme);
-
+const [isLoading, setIsLoading] = useState(true);
   const files = {
     assembly: file.assemblyFiles,
     ats: file.atsFiles,
@@ -189,57 +193,63 @@ const Webcontainer = () => {
     }
   }
 
+  async function renameFileFunction() {
+    if (activeFile && !selectedFolder) {
+      // Handle renaming of the active file
+      const currentFileName = activeFile.split("/").pop();
+      const newName = prompt("Enter the new name for " + currentFileName + ":");
+      if (newName) {
+        if (newName !== currentFileName) {
+          await renameItem(activeFile, newName);
+        } else {
+          alert("Please enter a different name.");
+        }
+      }
+    } else if (selectedFolder) {
+      // Handle renaming of the selected folder
+      const currentFolderName = selectedFolder.split("/").pop();
+      const newName = prompt(
+        "Enter the new name for " + currentFolderName + ":"
+      );
+      if (newName) {
+        if (newName !== currentFolderName) {
+          await renameItem(selectedFolder, newName);
+        } else {
+          alert("Please enter a different name.");
+        }
+      }
+    }
+  }
+
+  async function deleteFileFunction() {
+    if (selectedFolder === "/") {
+      alert("You cannot delete root folder");
+      return;
+    } else {
+      let confirmDelete;
+      if (selectedFolder) {
+        const folderName = selectedFolder.replace(/\/\//g, "");
+        confirmDelete = confirm(
+          `Are you sure you want to delete "${folderName}" folder ?`
+        );
+      } else {
+        const fileName = activeFile.replace(/\/\//g, "");
+        confirmDelete = confirm(
+          `Are you sure you want to delete "${fileName}" file?`
+        );
+      }
+      if (confirmDelete) {
+        deleteFolderRecursive(selectedFolder || activeFile);
+      }
+    }
+  }
+
   async function documentKeyDown(event) {
     if (event.key === "F2") {
-      if (activeFile && !selectedFolder) {
-        // Handle renaming of the active file
-        const currentFileName = activeFile.split("/").pop();
-        const newName = prompt(
-          "Enter the new name for " + currentFileName + ":"
-        );
-        if (newName) {
-          if (newName !== currentFileName) {
-            await renameItem(activeFile, newName);
-          } else {
-            alert("Please enter a different name.");
-          }
-        }
-      } else if (selectedFolder) {
-        // Handle renaming of the selected folder
-        const currentFolderName = selectedFolder.split("/").pop();
-        const newName = prompt(
-          "Enter the new name for " + currentFolderName + ":"
-        );
-        if (newName) {
-          if (newName !== currentFolderName) {
-            await renameItem(selectedFolder, newName);
-          } else {
-            alert("Please enter a different name.");
-          }
-        }
-      }
+      await renameFileFunction();
     } else if (event.key === "Delete") {
       // console.log(event.key);
-      if (selectedFolder === "/") {
-        alert("You cannot delete root folder");
-        return;
-      } else {
-        let confirmDelete;
-        if (selectedFolder) {
-          const folderName = selectedFolder.replace(/\/\//g, "");
-          confirmDelete = confirm(
-            `Are you sure you want to delete "${folderName}" folder ?`
-          );
-        } else {
-          const fileName = activeFile.replace(/\/\//g, "");
-          confirmDelete = confirm(
-            `Are you sure you want to delete "${fileName}" file?`
-          );
-        }
-        if (confirmDelete) {
-          deleteFolderRecursive(selectedFolder || activeFile);
-        }
-      }
+      await deleteFileFunction();
     }
   }
 
@@ -277,6 +287,16 @@ const Webcontainer = () => {
 
   async function createFileClick(event) {
     await createFileFunction();
+    contextMenu.style.display = "none";
+  }
+
+  async function renameFileClick(event) {
+    await renameFileFunction();
+    contextMenu.style.display = "none";
+  }
+
+  async function deleteFileClick(event) {
+    await deleteFileFunction();
     contextMenu.style.display = "none";
   }
 
@@ -460,6 +480,7 @@ const Webcontainer = () => {
         }
       });
 
+      setIsLoading(false)
       console.log("WebContainer booted successfully!");
 
       // Create a terminal
@@ -618,7 +639,7 @@ const Webcontainer = () => {
 
       // Separate folders and files
       for (const file of files) {
-        if (file.isDirectory()) {
+        if (file.isDirectory() && file.name !== "node_modules") {
           folders.push(file);
         } else {
           filesList.push(file);
@@ -691,35 +712,37 @@ const Webcontainer = () => {
         li.addEventListener("contextmenu", (event) => {
           event.preventDefault();
           const contextMenu = document.getElementById("contextMenu");
-          const renameFile = document.getElementById("renameFile");
-          const deleteFile = document.getElementById("deleteFile");
-          renameFile.onclick = async () => {
-            const currentFileName = file.name;
-            const newName = prompt(
-              `Enter the new name for "${currentFileName}":`
-            );
-            if (newName) {
-              if (newName !== currentFileName) {
-                await renameItem(filePath, newName);
-              } else {
-                alert("Please enter a different name.");
-              }
-            }
-            contextMenu.style.display = "none";
-          };
-          deleteFile.onclick = async () => {
-            if (filePath === "/") {
-              alert("You cannot delete the root folder.");
-              return;
-            }
-            const confirmDelete = confirm(
-              `Are you sure you want to delete "${file.name}"?`
-            );
-            if (confirmDelete) {
-              await deleteFolderRecursive(filePath);
-              contextMenu.style.display = "none";
-            }
-          };
+          // const renameFile = document.getElementById("renameFile");
+          // const deleteFile = document.getElementById("deleteFile");
+          // renameFile.onclick = async () => {
+          //   const currentFileName = file.name;
+          //   const newName = prompt(
+          //     `Enter the new name for "${currentFileName}":`
+          //   );
+          //   if (newName) {
+          //     if (newName !== currentFileName) {
+          //       await renameItem(filePath, newName);
+          //     } else {
+          //       alert("Please enter a different name.");
+          //     }
+          //   }
+          //   contextMenu.style.display = "none";
+          // };
+
+          // deleteFile.onclick = async () => {
+          //   if (filePath === "/") {
+          //     alert("You cannot delete the root folder.");
+          //     return;
+          //   }
+          //   const confirmDelete = confirm(
+          //     `Are you sure you want to delete "${file.name}"?`
+          //   );
+          //   if (confirmDelete) {
+          //     await deleteFolderRecursive(filePath);
+          //     contextMenu.style.display = "none";
+          //   }
+          // };
+
           contextMenu.style.left = `${event.clientX}px`;
           contextMenu.style.top = `${event.clientY}px`;
           contextMenu.style.display = "block";
@@ -1285,6 +1308,8 @@ const Webcontainer = () => {
         const fileTreeElement = document.getElementById("filetree");
         const createFolder = document.getElementById("createFolder");
         const createFile = document.getElementById("createFile");
+        const renameFile = document.getElementById("renameFile");
+        const deleteFile = document.getElementById("deleteFile");
         const contextMenu = document.getElementById("contextMenu");
         const terminalEl = document.getElementById("terminalEl");
         const searchInput = document.getElementById("search-input");
@@ -1307,6 +1332,8 @@ const Webcontainer = () => {
           fileTreeElement.addEventListener("contextmenu", fileTreeContextMenu);
           createFolder.addEventListener("click", createFolderClick);
           createFile.addEventListener("click", createFileClick);
+          renameFile.addEventListener("click", renameFileClick);
+          deleteFile.addEventListener("click", deleteFileClick);
           document.addEventListener("click", documentClick);
           contextMenu.addEventListener("click", contextMenuClick);
         }
@@ -1325,8 +1352,12 @@ const Webcontainer = () => {
       waitForElement("#filetree", (fileTreeElement) => {
         waitForElement("#createFolder", (createFolder) => {
           waitForElement("#createFile", (createFile) => {
-            waitForElement("#contextMenu", (contextMenu) => {
-              attachEventListeners();
+            waitForElement("#renameFile", (renameFile) => {
+              waitForElement("#deleteFile", (deleteFile) => {
+                waitForElement("#contextMenu", (contextMenu) => {
+                  attachEventListeners();
+                });
+              });
             });
           });
         });
@@ -1359,8 +1390,6 @@ const Webcontainer = () => {
       } else {
         console.log("else: waitForElement Js");
       }
-
-      
     }
   }, [location]);
 
@@ -1400,7 +1429,33 @@ const Webcontainer = () => {
     }
   }, [selectedLanguage, location]);
 
-  return <></>;
+  return <>
+  {
+    isLoading && location.pathname === '/playground' && <>
+        <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      height="100vh"
+      width="100%"
+      position="fixed"
+      top={0}
+      left={0}
+      zIndex={999}
+      
+      style={{ display: isLoading ? "flex" : "none" }}
+    >
+      <Box textAlign="center">
+        <CircularProgress color="secondary" />
+        <Typography variant="subtitle1" color="textSecondary" mt={2}>
+          Loading...
+        </Typography>
+      </Box>
+    </Box>
+
+    </>
+  }
+  </>;
 };
 
 export default Webcontainer;

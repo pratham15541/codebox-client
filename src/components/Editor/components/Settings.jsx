@@ -53,9 +53,9 @@ const Settings = ({ open, onClose }) => {
               <StyledBox marginTop="1rem">
                 <StyledTypography>Cursor Style:</StyledTypography>
               </StyledBox>
-              <StyledBox marginTop="1rem">
+              {/* <StyledBox marginTop="1rem">
                 <StyledTypography>Key Binding:</StyledTypography>
-              </StyledBox>
+              </StyledBox> */}
             </Grid>
             <Grid item xs={6}>
               <StyledBox>
@@ -71,9 +71,9 @@ const Settings = ({ open, onClose }) => {
               <StyledBox > 
                 <CursorStyle />
               </StyledBox>
-              <StyledBox>
+              {/* <StyledBox>
                 <KeyBinding />
-              </StyledBox>
+              </StyledBox> */}
             </Grid>
           </Grid>
         </DialogContent>

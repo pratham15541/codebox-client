@@ -114,8 +114,6 @@ const KeyBinding = () => {
     setKeyBinding(e.target.value);
   };
 
-
-
   const keyBindings = {
     Ace: "null",
     Vim: "ace/keyboard/vim",
@@ -155,5 +153,9 @@ const KeyBinding = () => {
     </FormControlWrapper>
   );
 };
+
+const Foldings = () => {
+}
+
 
 export { FontSize, CursorStyle ,KeyBinding};
