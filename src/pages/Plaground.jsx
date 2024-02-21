@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import SEO from "../seo/Seo";
 import Editor from "../components/Editor/Editor";
 import { useLocation } from "react-router-dom";
-// import '../utils/Webcontainer.js'
-// import Webcontainer from "../utils/Webcontainer";
+import Webcontainer from "../utils/Webcontainer";
 
 const Playground = () => {
   return (
@@ -14,7 +13,7 @@ const Playground = () => {
         name="Playground"
         type="Website"
       />
-      {/* <Webcontainer /> */}
+      <Webcontainer />
       <Editor />
     </>
   );

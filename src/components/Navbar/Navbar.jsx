@@ -19,8 +19,10 @@ import {
   Divider,
   MenuItem,
   Menu,
+  Tooltip
 } from "@mui/material";
 import { RiReactjsLine, RiMenu2Fill, RiCloseFill } from "react-icons/ri";
+import { LiaCentercode } from "react-icons/lia";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { IconContext } from "react-icons";
 import { styled } from "@mui/system";
@@ -30,6 +32,7 @@ import useFetch from "../../hooks/fetch.hook";
 import UserAvatar from "../../assets/images/avatar.png";
 import { getUsernameFromToken } from "../../helpers/helper";
 import { useLocation, useNavigate } from "react-router-dom";
+import { AuthorizeUser } from "../../middleware/auth";
 
 const LoginButton = styled(Button)(({ theme }) => ({
   "&:hover": {
@@ -109,6 +112,8 @@ const Navbar = () => {
     fetchData();
   }, [location]);
 
+
+
   const [open, setOpen] = useState(false);
 
   const handleToggleDrawer = () => {
@@ -148,7 +153,7 @@ const Navbar = () => {
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
               <IconContext.Provider value={{ size: "1.5em" }}>
                 <IconButton edge="start" color="inherit" aria-label="menu">
-                  <RiReactjsLine />
+                <LiaCentercode />
                 </IconButton>
               </IconContext.Provider>
             </Link>
@@ -175,13 +180,34 @@ const Navbar = () => {
                   }}
                 >
                   <Typography variant="h6" component="div">
-                    Dashboard
+                    Admin
                   </Typography>
                 </Link>
               </Grid>
             ) : null}
 
-            <Grid item>
+           {
+            isUser ?( <Grid item>
+              <Link
+                className="width-increasing-animation"
+                to="/dashboard"
+                style={{
+                  marginTop: "0.2rem",
+                  textDecoration: "none",
+                  color:
+                    theme.palette.mode === "dark"
+                      ? theme.palette.common.white
+                      : theme.palette.grey[900],
+                }}
+              >
+                <Typography variant="h6" component="div">
+                  Dashboard
+                </Typography>
+              </Link>
+            </Grid>):(null)
+           }
+
+            {/* <Grid item>
               <Link
                 className="width-increasing-animation"
                 to="/docs"
@@ -198,13 +224,14 @@ const Navbar = () => {
                   Docs
                 </Typography>
               </Link>
-            </Grid>
+            </Grid> */}
 
             <Grid item>
               <Link
                 className="width-increasing-animation"
                 // target="_top"
-                to="/playground"
+                to={"/playground"}
+                
                 style={{
                   marginTop: "0.2rem",
                   textDecoration: "none",
@@ -235,44 +262,57 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <Grid item>
-                  {/* <Link to="/profile" style={{ textDecoration: "none" }}> */}
-                  <img
-                    src={imageUrl}
-                    crossOrigin="anonymous"
-                    alt="user avatar"
-                    onClick={handleMenu}
-                    style={{
-                      width: "35px",
-                      height: "35px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      cursor: "pointer",
-                    }}
-                  />
-                  {/* </Link> */}
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "left",
-                    }}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
-                    <Link to={"/profile"}>
-                      {" "}
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    </Link>
-                    <MenuItem onClick={logoutHandler}>Logout</MenuItem>
-                  </Menu>
-                </Grid>
+                <AuthorizeUser>
+                  <Grid item>
+                    {/* <Link to="/profile" style={{ textDecoration: "none" }}> */}
+                    <Tooltip
+          title="Account"
+          placement="bottom-end"
+          arrow
+          enterTouchDelay={700}
+          enterDelay={700}
+          enterNextDelay={700}
+        >
+                    <div>
+                    <img
+                      src={imageUrl}
+                      crossOrigin="anonymous"
+                      alt="user avatar"
+                      onClick={handleMenu}
+                      style={{
+                        width: "35px",
+                        height: "35px",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                        cursor: "pointer",
+                      }}
+                    />
+                    </div>
+                    </Tooltip>
+                    {/* </Link> */}
+                    <Menu
+                      id="menu-appbar"
+                      anchorEl={anchorEl}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                    >
+                      <Link to={"/profile"}>
+                        {" "}
+                        <MenuItem onClick={handleClose}>Profile</MenuItem>
+                      </Link>
+                      <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+                    </Menu>
+                  </Grid>
+                </AuthorizeUser>
               </>
             )}
           </Hidden>

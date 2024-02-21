@@ -175,3 +175,80 @@ export async function getUserById(id) {
     return { error: "User not exist..." };
   }
 }
+
+export async function createCode(response) {
+  try {
+    const token = localStorage.getItem("token");
+   const decode =  getUsernameFromToken();
+  const id = decode.userId;
+    // const id = response.id;
+    const  data  = await axios.post(`/api/createCode?id=${id}`, response, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function getAllCodes() {
+  try {
+    const token = localStorage.getItem("token");
+    const { data } = await axios.get("/api/getAllCodes", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function getCodeById(id) {
+  try {
+    const token = localStorage.getItem("token");
+    const { data } = await axios.get(`/api/getCodeById?id=${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function getCodesByUserId() {
+  try {
+    const token = localStorage.getItem("token");
+    const decode =  getUsernameFromToken();
+    const id = decode.userId;
+    const { data } = await axios.get(`/api/getCodesByUserId?id=${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function updateCode(response) {
+  try {
+    const token = localStorage.getItem("token");
+    const  data  = await axios.patch(`/api/updateCode?id=${response.id}`, response, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function deleteCode(id) {
+  try {
+    const token = localStorage.getItem("token");
+    const { data } = await axios.patch(`/api/deleteCode?id=${id}`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}

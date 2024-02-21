@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { WebContainer } from "@webcontainer/api";
 import { Terminal } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
@@ -23,9 +23,16 @@ import * as file from "../files/files";
 // import * as prettier from "https://unpkg.com/prettier@3.1.1/standalone.mjs";
 import * as prettier from "prettier/standalone.mjs";
 import { prettierPlugins, parsers } from "../constants/prettierPlugins";
-import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import {
+  createCode,
+  getUsernameFromToken,
+  updateCode,
+} from "../helpers/helper";
+import "../assets/css/Modal.css";
+import { ToastContainer, toast } from "react-toastify";
 
 // Declare variables for DOM elements and WebContainer instance
 let webcontainerInstance = null;
@@ -59,6 +66,12 @@ let selectedTheme = null;
 let selectedLanguageFiles = null;
 let dispatch = null;
 let formatCode = null;
+let codeSaved = false;
+let saveCodeId = null;
+let codeFromSaveFile = null;
+let languageFromSaveFile = null;
+let titleFromSaveFile = null;
+let descriptionFromSaveFile = null;
 
 /* 
 git install
@@ -86,19 +99,46 @@ git install
 //     },
 //     2
 //   );
-//   // console.log(formattedFileTree);
+//   console.log(formattedFileTree);
 // }
 // },5000)
 
-const Webcontainer = () => {
+export function setCodeFromSaveFile(
+  code,
+  id,
+  codeLanguage,
+  title,
+  description
+) {
+  codeFromSaveFile = code;
+  languageFromSaveFile = codeLanguage;
+  titleFromSaveFile = title;
+  descriptionFromSaveFile = description;
+  codeSaved = true;
+  saveCodeId = id;
+  console.log(
+    "setCodeFromSaveFile",
+    codeFromSaveFile,
+    languageFromSaveFile,
+    titleFromSaveFile,
+    descriptionFromSaveFile
+  );
+}
 
+const Webcontainer = () => {
+  const themeMode = useSelector((state) => state.theme.mode);
   const location = useLocation();
+  const previousLocation = useRef();
+  const [codeSaving, setCodeSaving] = useState(false);
   dispatch = useDispatch();
+
   selectedLanguage = useSelector(
     (state) => state.languageSelector.langSelected
   );
+
   selectedTheme = useSelector((state) => state.themeSelector.selectedTheme);
-const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+
   const files = {
     assembly: file.assemblyFiles,
     ats: file.atsFiles,
@@ -125,7 +165,7 @@ const [isLoading, setIsLoading] = useState(true);
     html: file.htmlFiles,
     idris: file.idrisFiles,
     java: file.javaFiles,
-    javascript: file.javascriptFiles,
+    javascript: file.expressFiles,
     julia: file.juliaFiles,
     kotlin: file.kotlinFiles,
     lua: file.luaFiles,
@@ -147,7 +187,15 @@ const [isLoading, setIsLoading] = useState(true);
     typescript: file.typescriptFiles,
     zig: file.zigFiles,
   };
-  selectedLanguageFiles = files[selectedLanguage];
+
+
+  
+
+  selectedLanguageFiles =  codeFromSaveFile || files[selectedLanguage];
+  codeFromSaveFile = null;
+ 
+
+
 
   async function fileTreeClickOne(event) {
     console.log("fileTreeClickOne");
@@ -275,6 +323,101 @@ const [isLoading, setIsLoading] = useState(true);
     }
   }
 
+  async function formatedFileTreeStructure() {
+    if (webcontainerInstance) {
+      const fileTreeContent = await displayFolderAndFileStructure("/");
+      const formattedFileTree = JSON.stringify(
+        fileTreeContent,
+        (key, value) => {
+          if (key === "contents" && typeof value === "string") {
+            // Replace '\n' with actual newlines in the file content
+            return value.replace(/\\n/g, "\n");
+          }
+          return value;
+        },
+        2
+      );
+      return formattedFileTree;
+    }
+  }
+
+  function toggleModal() {
+    const modal = document.getElementById("codeModal");
+    if (modal.style.display === "none") {
+      modal.style.display = "flex";
+      if (titleFromSaveFile) {
+        document.getElementById("title").value = titleFromSaveFile;
+        document.getElementById("description").value = descriptionFromSaveFile;
+      }
+    } else {
+      modal.style.display = "none";
+    }
+  }
+
+  async function saveCodeClick(event) {
+    //  const fileTreeStructure = await formatedFileTreeStructure();
+    //  if(!codeSaved){
+    toggleModal();
+    //  }else{
+    //   console.log({code: fileTreeStructure, title, description});
+    //  }
+  }
+
+  async function mainSaveCodeFunction(event) {
+    const fileTreeStructure = await formatedFileTreeStructure();
+    const titleValue = document.getElementById("title").value;
+    const descriptionValue = document.getElementById("description").value;
+
+    if (!titleValue) {
+      toast.error("Title is required");
+      return;
+    }
+
+    try {
+      let res;
+
+      if (!codeSaved) {
+        res = await createCode({
+          code: fileTreeStructure,
+          title: titleValue,
+          description: descriptionValue,
+          codeLanguage: selectedLanguage,
+        });
+      } else {
+        res = await updateCode({
+          code: fileTreeStructure,
+          title: titleValue,
+          description: descriptionValue,
+          codeLanguage: selectedLanguage,
+          id: saveCodeId,
+        });
+      }
+
+      if (
+        (codeSaved && res.status === 200) ||
+        (!codeSaved && res.status === 201)
+      ) {
+        const action = codeSaved ? "updated" : "saved";
+        toast.success(`Code ${action} successfully`);
+
+        if (!codeSaved) {
+          saveCodeId = res.data.userCode._id;
+          codeSaved = true;
+          setCodeSaving(true);
+        }
+      }
+    } catch (error) {
+      toast.error(`Error in ${codeSaved ? "updating" : "saving"} code`);
+      console.log(error);
+    }
+
+    toggleModal();
+  }
+
+  async function closeModalFunction(event) {
+    toggleModal();
+  }
+
   async function createFolderClick(event) {
     await createFolderFunction();
     contextMenu.style.display = "none";
@@ -296,7 +439,9 @@ const [isLoading, setIsLoading] = useState(true);
   }
 
   async function documentClick(event) {
-    contextMenu.style.display = "none";
+    if (contextMenu) {
+      contextMenu.style.display = "none";
+    }
   }
 
   async function contextMenuClick(event) {
@@ -454,13 +599,18 @@ const [isLoading, setIsLoading] = useState(true);
             stopWebContainer();
             initializeComponents(selectedLanguageFiles);
           } else {
-            setTimeout(() => initializeComponents(selectedLanguageFiles), 2000); // Retry after 2 seconds
+            setTimeout(() => {
+              if (webcontainerInstance == null) {
+                initializeComponents(selectedLanguageFiles);
+              }
+            }, 2000); // Retry after 2 seconds
           }
         }
       }
 
       console.log("Booting WebContainer...");
       webcontainerInstance = await WebContainer.boot();
+      // const files = codeFromSaveFile !== null ? codeFromSaveFile : selectedLanguageFiles;
       await webcontainerInstance.mount(selectedLanguageFiles);
 
       // When the server is ready, set the iframe's src
@@ -475,7 +625,7 @@ const [isLoading, setIsLoading] = useState(true);
         }
       });
 
-      setIsLoading(false)
+      setIsLoading(false);
       console.log("WebContainer booted successfully!");
 
       // Create a terminal
@@ -483,6 +633,7 @@ const [isLoading, setIsLoading] = useState(true);
         terminal = await createTerminal(terminalEl);
 
         await startShell(terminal);
+        // await installDependenciesAndStartServer(terminal);
 
         // Resize the terminal when the window is resized
         window.addEventListener("resize", () => {
@@ -493,6 +644,8 @@ const [isLoading, setIsLoading] = useState(true);
           });
         });
       }
+
+      
     } catch (error) {
       console.error("Error booting WebContainer:", error);
     }
@@ -1289,74 +1442,119 @@ const [isLoading, setIsLoading] = useState(true);
   }
 
   useEffect(() => {
-    if (location.pathname === "/playground") {
-      const waitForElement = (selector, callback) => {
-        const element = document.querySelector(selector);
-        if (element) {
-          callback(element);
-        } else {
-          setTimeout(() => waitForElement(selector, callback), 100);
-        }
-      };
+    const waitForElement = (selector, callback) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        callback(element);
+      } else {
+        setTimeout(() => waitForElement(selector, callback), 100);
+      }
+    };
 
-      const attachEventListeners = () => {
-        const fileTreeElement = document.getElementById("filetree");
-        const createFolder = document.getElementById("createFolder");
-        const createFile = document.getElementById("createFile");
-        const renameFile = document.getElementById("renameFile");
-        const deleteFile = document.getElementById("deleteFile");
-        const contextMenu = document.getElementById("contextMenu");
-        const terminalEl = document.getElementById("terminalEl");
-        const searchInput = document.getElementById("search-input");
-        const searchNextBtn = document.getElementById("search-next");
-        const searchPreviousBtn = document.getElementById("search-previous");
-        const closeSearch = document.getElementById("close-search");
-        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
-        const formatCode = document.getElementById("formatCode");
+    const attachEventListeners = () => {
+      const fileTreeElement = document.getElementById("filetree");
+      const createFolder = document.getElementById("createFolder");
+      const createFile = document.getElementById("createFile");
+      const renameFile = document.getElementById("renameFile");
+      const deleteFile = document.getElementById("deleteFile");
+      const contextMenu = document.getElementById("contextMenu");
+      const terminalEl = document.getElementById("terminalEl");
+      const searchInput = document.getElementById("search-input");
+      const searchNextBtn = document.getElementById("search-next");
+      const searchPreviousBtn = document.getElementById("search-previous");
+      const closeSearch = document.getElementById("close-search");
+      const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+      const formatCode = document.getElementById("formatCode");
+      const saveCode = document.getElementById("saveFile");
+      const closeModal = document.getElementById("closeModal");
+      const mainSaveCode = document.getElementById("mainSaveCode");
 
-        if (
-          fileTreeElement &&
-          createFolder &&
-          createFile &&
-          contextMenu &&
-          formatCode
-        ) {
-          fileTreeElement.addEventListener("click", fileTreeClickOne);
-          document.addEventListener("keydown", documentKeyDown);
-          fileTreeElement.addEventListener("click", fileTreeClickTwo);
-          fileTreeElement.addEventListener("contextmenu", fileTreeContextMenu);
-          createFolder.addEventListener("click", createFolderClick);
-          createFile.addEventListener("click", createFileClick);
-          renameFile.addEventListener("click", renameFileClick);
-          deleteFile.addEventListener("click", deleteFileClick);
+      if (selectedLanguage) {
+        fileTreeElement.addEventListener("click", fileTreeClickOne);
+        document.addEventListener("keydown", documentKeyDown);
+        fileTreeElement.addEventListener("click", fileTreeClickTwo);
+        fileTreeElement.addEventListener("contextmenu", fileTreeContextMenu);
+        createFolder.addEventListener("click", createFolderClick);
+        createFile.addEventListener("click", createFileClick);
+        renameFile.addEventListener("click", renameFileClick);
+        deleteFile.addEventListener("click", deleteFileClick);
+
+        contextMenu.addEventListener("click", contextMenuClick);
+        if (contextMenu) {
           document.addEventListener("click", documentClick);
-          contextMenu.addEventListener("click", contextMenuClick);
         }
-        if (selectedLanguage == "javascript") {
-          formatCode.addEventListener("click", formatFile);
-          terminalEl.addEventListener("keydown", terminalKeyDown);
-          searchInput.addEventListener("input", searchInputFunction);
-          searchNextBtn.addEventListener("click", searchNextFunction);
-          searchPreviousBtn.addEventListener("click", searchPreviousFunction);
-          searchInput.addEventListener("keydown", searchKeyDown);
-          closeSearch.addEventListener("click", closeSearchFunction);
-          scrollToTopBtn.addEventListener("click", scrollToTopFunction);
-        }
-      };
+        if (saveCode) {
+          saveCode.addEventListener("click", saveCodeClick);
+          closeModal.addEventListener("click", closeModalFunction);
 
-      waitForElement("#filetree", (fileTreeElement) => {
-        waitForElement("#createFolder", (createFolder) => {
-          waitForElement("#createFile", (createFile) => {
-            waitForElement("#renameFile", (renameFile) => {
-              waitForElement("#deleteFile", (deleteFile) => {
-                waitForElement("#contextMenu", (contextMenu) => {
-                  attachEventListeners();
-                });
-              });
-            });
-          });
-        });
-      });
+          mainSaveCode.addEventListener("click", mainSaveCodeFunction);
+        }
+      }
+
+      if (selectedLanguage == "javascript") {
+        formatCode.addEventListener("click", formatFile);
+        terminalEl.addEventListener("keydown", terminalKeyDown);
+        searchInput.addEventListener("input", searchInputFunction);
+        searchNextBtn.addEventListener("click", searchNextFunction);
+        searchPreviousBtn.addEventListener("click", searchPreviousFunction);
+        searchInput.addEventListener("keydown", searchKeyDown);
+        closeSearch.addEventListener("click", closeSearchFunction);
+        scrollToTopBtn.addEventListener("click", scrollToTopFunction);
+      }
+    };
+
+    const removeEventListeners = () => {
+      const fileTreeElement = document.getElementById("filetree");
+      const createFolder = document.getElementById("createFolder");
+      const createFile = document.getElementById("createFile");
+      const renameFile = document.getElementById("renameFile");
+      const deleteFile = document.getElementById("deleteFile");
+      const contextMenu = document.getElementById("contextMenu");
+      const terminalEl = document.getElementById("terminalEl");
+      const searchInput = document.getElementById("search-input");
+      const searchNextBtn = document.getElementById("search-next");
+      const searchPreviousBtn = document.getElementById("search-previous");
+      const closeSearch = document.getElementById("close-search");
+      const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+      const formatCode = document.getElementById("formatCode");
+      const saveCode = document.getElementById("saveFile");
+      const mainSaveCode = document.getElementById("mainSaveCode");
+      const closeModal = document.getElementById("closeModal");
+
+      if (
+        selectedLanguage &&
+        fileTreeElement &&
+        createFile &&
+        createFolder &&
+        renameFile &&
+        deleteFile &&
+        contextMenu &&
+        terminalEl &&
+        searchInput &&
+        searchNextBtn &&
+        searchPreviousBtn &&
+        closeSearch &&
+        scrollToTopBtn &&
+        formatCode &&
+        saveCode
+      ) {
+        fileTreeElement.removeEventListener("click", fileTreeClickOne);
+        document.removeEventListener("keydown", documentKeyDown);
+        fileTreeElement.removeEventListener("click", fileTreeClickTwo);
+        fileTreeElement.removeEventListener("contextmenu", fileTreeContextMenu);
+        createFolder.removeEventListener("click", createFolderClick);
+        createFile.removeEventListener("click", createFileClick);
+        renameFile.removeEventListener("click", renameFileClick);
+        deleteFile.removeEventListener("click", deleteFileClick);
+        document.removeEventListener("click", documentClick);
+        contextMenu.removeEventListener("click", contextMenuClick);
+        if (saveCode) {
+          saveCode.removeEventListener("click", saveCodeClick);
+          closeModal.removeEventListener("click", closeModalFunction);
+
+          mainSaveCode.removeEventListener("click", mainSaveCodeFunction);
+        }
+      }
 
       if (
         selectedLanguage == "javascript" &&
@@ -1365,8 +1563,41 @@ const [isLoading, setIsLoading] = useState(true);
         searchNextBtn &&
         searchPreviousBtn &&
         closeSearch &&
-        scrollToTopBtn
+        scrollToTopBtn &&
+        formatCode
       ) {
+        formatCode.removeEventListener("click", formatFile);
+        terminalEl.removeEventListener("keydown", terminalKeyDown);
+        searchInput.removeEventListener("input", searchInputFunction);
+        searchNextBtn.removeEventListener("click", searchNextFunction);
+        searchPreviousBtn.removeEventListener("click", searchPreviousFunction);
+        searchInput.removeEventListener("keydown", searchKeyDown);
+        closeSearch.removeEventListener("click", closeSearchFunction);
+        scrollToTopBtn.removeEventListener("click", scrollToTopFunction);
+      }
+    };
+    if (location.pathname == "/playground") {
+      waitForElement("#filetree", (fileTreeElement) => {
+        waitForElement("#createFolder", (createFolder) => {
+          waitForElement("#createFile", (createFile) => {
+            waitForElement("#renameFile", (renameFile) => {
+              waitForElement("#deleteFile", (deleteFile) => {
+                waitForElement("#contextMenu", (contextMenu) => {
+                  waitForElement("#saveFile", (saveCode) => {
+                    waitForElement("#closeModal", (closeModal) => {
+                      waitForElement("#mainSaveCode", (mainSaveCode) => {
+                        attachEventListeners();
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+
+      if (selectedLanguage == "javascript") {
         waitForElement("#terminalEl", (terminalEl) => {
           waitForElement("#search-input", (searchInput) => {
             waitForElement("#search-next", (searchNextBtn) => {
@@ -1382,30 +1613,75 @@ const [isLoading, setIsLoading] = useState(true);
             });
           });
         });
-      } else {
-        console.log("else: waitForElement Js");
       }
     }
+
+    // Cleanup function
+    return () => {
+      removeEventListeners();
+    };
   }, [location]);
 
   useEffect(() => {
-    // console.log("webcontainer useEffect on change location");
-    if (location.pathname === "/playground") {
-      // console.log(location.pathname);
-      if (webcontainerInstance === null) {
-        // console.log("webcontainerInstance is null");
-        initializeComponents(selectedLanguageFiles);
+    // Save the current location.pathname for future comparison
+
+    async function webcontainerOnChangeLocation() {
+      codeSaved = false;
+      setCodeSaving(false);
+      titleFromSaveFile = "";
+      descriptionFromSaveFile = "";
+      codeFromSaveFile = null;
+      saveCodeId = null;
+      let title = document.getElementById("title");
+      let description = document.getElementById("description");
+      if (title) {
+        title.value = "";
       }
-    } else {
-      stopWebContainer();
+      if (description) {
+        description.value = "";
+      }
+      if (location.pathname === "/playground") {
+        // Code to be executed when location.pathname is '/playground'
+        if (webcontainerInstance === null) {
+          initializeComponents(selectedLanguageFiles);
+        }
+      }
     }
+    webcontainerOnChangeLocation();
+
+    return () => {
+      if (location.pathname == "/playground") {
+        stopWebContainer();
+      }
+    };
+
+    // Cleanup function to update previousLocation after the component renders
   }, [location]);
 
-  useEffect(() => {
+  useEffect(() => {         
     async function webcontainerOnChangeLanguage() {
       // console.log("webcontainerOnChangeLanguage");
+      const fileTreeStructure = formatedFileTreeStructure();
+      fileTreeStructure
+        .then((result) => console.log(result))
+        .catch((error) => console.log(error));
       await stopWebContainer();
+      codeSaved = false;
+      setCodeSaving(false);
+      titleFromSaveFile = "";
+      descriptionFromSaveFile = "";
+      codeFromSaveFile = null;
+      saveCodeId = null;
+      let title = document.getElementById("title");
+      let description = document.getElementById("description");
+      if (title) {
+        title.value = "";
+      }
+      if (description) {
+        description.value = "";
+      }
       if (selectedLanguageFiles && webcontainerInstance === null) {
+       
         await initializeComponents(selectedLanguageFiles);
       } else {
         // console.log("selectedLanguageFiles is null");
@@ -1422,35 +1698,76 @@ const [isLoading, setIsLoading] = useState(true);
 
       webcontainerOnChangeLanguage();
     }
-  }, [selectedLanguage, location]);
+  }, [selectedLanguage]);
 
-  return <>
-  {
-    isLoading && location.pathname === '/playground' && <>
-        <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      width="100%"
-      position="fixed"
-      top={0}
-      left={0}
-      zIndex={999}
-      
-      style={{ display: isLoading ? "flex" : "none" }}
-    >
-      <Box textAlign="center">
-        <CircularProgress color="secondary" />
-        <Typography variant="subtitle1" color="textSecondary" mt={2}>
-          Loading...
-        </Typography>
-      </Box>
-    </Box>
+  return (
+    <>
+      {isLoading &&
+        location.pathname === "/playground" &&
+        webcontainerInstance === null && (
+          <>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="100vh"
+              width="100%"
+              position="fixed"
+              top={0}
+              left={0}
+              zIndex={999}
+              style={{ display: isLoading ? "flex" : "none" }}
+            >
+              <Box textAlign="center">
+                <CircularProgress color="secondary" />
+                <Typography variant="subtitle1" color="textSecondary" mt={2}>
+                  Loading...
+                </Typography>
+              </Box>
+            </Box>
+          </>
+        )}
 
+      {
+        location.pathname === "/playground" && (
+          <div id="codeModal" className="modal">
+        <div className="modal-content">
+          <span style={{ cursor: "pointer", float: "right" }} id="closeModal">
+            &times;
+          </span>
+          <label htmlFor="title">Title: </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Title"
+            required
+          />
+          <br />
+          <label htmlFor="description">Description: </label>
+          <textarea
+            id="description"
+            rows="4"
+            cols="50"
+            placeholder="Description (Optional)"
+          ></textarea>
+          <br />
+          <button className="action-btn" id="mainSaveCode">
+            {codeSaving == true || codeSaved == true
+              ? "Update Code"
+              : "Save Code"}
+          </button>
+        </div>
+      </div>
+        )
+      }
+
+      <ToastContainer
+        autoClose={2000}
+        theme={themeMode === "dark" ? "light" : "dark"}
+      />
     </>
-  }
-  </>;
+  );
 };
 
 export default Webcontainer;

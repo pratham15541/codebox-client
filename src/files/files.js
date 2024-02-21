@@ -7,7 +7,7 @@ export const expressFiles =
   },
   "package.json": {
     "file": {
-      "contents": "      {\n        \"name\":\"example-app\",\n        \"dependencies\":{\n           \"express\":\"latest\"\n        },\n        \"devDependencies\":{\n           \"nodemon\":\"latest\"\n        },\n        \"scripts\":{\n           \"dev\":\"nodemon --watch './' index.js\"\n        }\n     }"
+      "contents": "\n      {\n        \"name\":\"example-app\",\n        \"dependencies\":{\n           \"express\":\"latest\"\n        },\n        \"devDependencies\":{\n           \"nodemon\":\"latest\"\n        },\n        \"scripts\":{\n          \"dev\":\"nodemon --watch './' index.js\",\n          \"start\":\"node index.js\"\n        }\n     }"
     }
   }
 }
@@ -126,7 +126,7 @@ export const coffeescriptFiles = {
 export const cppFiles = {
   "main.cpp": {
     "file": {
-      "contents": "#include <iostream>\n\nint main() {\n    std::cout << \"Hello World!\";\n    return 0;\n}"
+      "contents": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello World!\";\n    return 0;\n}"
     }
   }
 }
