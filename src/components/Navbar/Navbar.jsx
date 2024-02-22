@@ -136,7 +136,7 @@ const Navbar = () => {
   function logoutHandler() {
     localStorage.removeItem("token");
     handleClose();
-    console.log("logout success");
+    // console.log("logout success");
     navigate("/signin");
   }
 

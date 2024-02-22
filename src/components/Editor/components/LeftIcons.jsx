@@ -43,7 +43,7 @@ const LeftIcons = ({ openFiletree, closeFiletree }) => {
 
   const handleSaveFile = () => {
     // Implement the logic for saving the file
-    console.log("save file");
+    // console.log("save file");
     handleClose();
   };
 

@@ -116,13 +116,6 @@ export function setCodeFromSaveFile(
   descriptionFromSaveFile = description;
   codeSaved = true;
   saveCodeId = id;
-  console.log(
-    "setCodeFromSaveFile",
-    codeFromSaveFile,
-    languageFromSaveFile,
-    titleFromSaveFile,
-    descriptionFromSaveFile
-  );
 }
 
 const Webcontainer = () => {
@@ -198,7 +191,7 @@ const Webcontainer = () => {
 
 
   async function fileTreeClickOne(event) {
-    console.log("fileTreeClickOne");
+    // console.log("fileTreeClickOne");
     const target = event.target;
     const isFolder =
       target.classList.contains("folder") ||
@@ -297,7 +290,7 @@ const Webcontainer = () => {
   }
 
   async function fileTreeClickTwo(event) {
-    console.log("fileTreeClickTwo");
+    // console.log("fileTreeClickTwo");
     if (event.target.classList.contains("folder")) {
       resetFilePath();
     } else if (!event.target.closest("ul")) {
@@ -306,7 +299,7 @@ const Webcontainer = () => {
   }
 
   async function fileTreeContextMenu(event) {
-    console.log("fileTreeContextMenu");
+    // console.log("fileTreeContextMenu");
     if (webcontainerInstance) {
       event.preventDefault(); // Prevent the default browser context menu from showing
 
@@ -450,7 +443,7 @@ const Webcontainer = () => {
 
   async function terminalKeyDown(event) {
     if (event.ctrlKey && event.shiftKey && event.key === "F") {
-      console.log(event);
+      // console.log(event);
       // Show the search input field
       searchInput.style.display = "block";
       searchNextBtn.style.display = "block";
@@ -463,7 +456,7 @@ const Webcontainer = () => {
 
   async function searchInputFunction(event) {
     const searchTerm = searchInput.value;
-    console.log(searchTerm);
+    // console.log(searchTerm);
 
     // Perform the search within the terminal using the SearchAddon
     if (searchTerm) {
@@ -521,7 +514,7 @@ const Webcontainer = () => {
 
     await writeToFile(activeFile, formattedFile);
     textareaEl.getSession().setValue(formattedFile);
-    console.log("format code");
+    // console.log("format code");
   }
 
   // Function to check if DOM elements are ready
@@ -532,7 +525,7 @@ const Webcontainer = () => {
 
   //creating terminal
   async function createTerminal(terminalEl) {
-    console.log("createTerminal");
+    // console.log("createTerminal");
     fitAddon = new FitAddon();
     searchAddon = new SearchAddon();
     const terminal = new Terminal({
@@ -559,7 +552,7 @@ const Webcontainer = () => {
 
   // Function to set the active file
   async function setActiveFile(filePath) {
-    console.log("setActiveFile");
+    // console.log("setActiveFile");
     activeFile = filePath;
 
     // Remove the "active-file" class from the previously active file
@@ -578,7 +571,7 @@ const Webcontainer = () => {
 
   // Function to initialize the components
   async function initializeComponents(selectedLanguageFiles) {
-    console.log("initializeComponents");
+    // console.log("initializeComponents");
     fileTreeElement = document.querySelector("#filetree");
     try {
       // Get DOM elements
@@ -591,9 +584,9 @@ const Webcontainer = () => {
 
         // Check if any of the elements are null
         if (!areDOMElementsReady()) {
-          console.log(
-            "One or more elements are null. Retrying in 2 seconds..."
-          );
+          // console.log(
+          //   "One or more elements are null. Retrying in 2 seconds..."
+          // );
 
           if (webcontainerInstance != null) {
             stopWebContainer();
@@ -608,7 +601,7 @@ const Webcontainer = () => {
         }
       }
 
-      console.log("Booting WebContainer...");
+      // console.log("Booting WebContainer...");
       webcontainerInstance = await WebContainer.boot();
       // const files = codeFromSaveFile !== null ? codeFromSaveFile : selectedLanguageFiles;
       await webcontainerInstance.mount(selectedLanguageFiles);
@@ -616,7 +609,7 @@ const Webcontainer = () => {
       // When the server is ready, set the iframe's src
       webcontainerInstance.on("server-ready", (port, url) => {
         iframeEl.src = url;
-        console.log(url);
+        // console.log(url);
       });
 
       webcontainerInstance.on("port", async (port, type, url) => {
@@ -626,7 +619,7 @@ const Webcontainer = () => {
       });
 
       setIsLoading(false);
-      console.log("WebContainer booted successfully!");
+      // console.log("WebContainer booted successfully!");
 
       // Create a terminal
       if (selectedLanguage === "javascript") {
@@ -697,7 +690,7 @@ const Webcontainer = () => {
       textareaEl.container.style.resize = "horizontal";
       document.addEventListener("mouseup", (e) => textareaEl.resize());
 
-      console.log("textareaEl is not null");
+      // console.log("textareaEl is not null");
     }
 
     // console.log("webcontainerInstance is not null");
@@ -736,7 +729,7 @@ const Webcontainer = () => {
 
   // Function to update the file tree UI
   async function updateFileTree(fileTree) {
-    console.log("updateFileTree");
+    // console.log("updateFileTree");
     // Clear the existing file tree UI
     fileTreeElement.innerHTML = "";
 
@@ -776,7 +769,7 @@ const Webcontainer = () => {
     depth = 0,
     parentElement = document.body
   ) {
-    console.log("readFiles");
+    // console.log("readFiles");
     if (webcontainerInstance) {
       const files = await webcontainerInstance.fs.readdir(directory, {
         withFileTypes: true,
@@ -848,7 +841,7 @@ const Webcontainer = () => {
 
         const filePath = `${directory}/${file.name}`;
         span.addEventListener("click", async () => {
-          console.log("File clicked:", filePath);
+          // console.log("File clicked:", filePath);
           const fileContent = await getFileContent(filePath);
           showFileContent(file.name, fileContent, filePath);
 
@@ -901,7 +894,7 @@ const Webcontainer = () => {
 
       parentElement.appendChild(ul);
     } else {
-      console.log("webcontainerInstance is null");
+      // console.log("webcontainerInstance is null");
     }
   }
 
@@ -910,13 +903,13 @@ const Webcontainer = () => {
     // console.log(JSON.stringify(webcontainerInstance)); // Log the instance before teardown
     if (webcontainerInstance !== null) {
       try {
-        console.log("Removing files...");
+        // console.log("Removing files...");
         await removeFiles("/");
-        console.log("Files removed");
-        console.log("clearing interval");
+        // console.log("Files removed");
+        // console.log("clearing interval");
         // clearInterval(fileChangeIntervalId);
-        console.log("interval cleared");
-        console.log("Stopping WebContainer...");
+        // console.log("interval cleared");
+        // console.log("Stopping WebContainer...");
 
         if (shellProcess) {
           // Kill the process and wait for it to complete
@@ -931,7 +924,7 @@ const Webcontainer = () => {
           shellProcess ? shellProcess.kill() : Promise.resolve(), // Ensure shellProcess.kill() is a Promise
           webcontainerInstance.teardown(),
         ]);
-        console.log("WebContainer stopped"); // Log after teardown
+        // console.log("WebContainer stopped"); // Log after teardown
       } catch (error) {
         console.error("Error stopping WebContainer", error);
       } finally {
@@ -942,7 +935,7 @@ const Webcontainer = () => {
   }
 
   async function startShell(terminal) {
-    console.log("startShell");
+    // console.log("startShell");
     try {
       shellProcess = await webcontainerInstance.spawn("jsh", {
         terminal: {
@@ -993,7 +986,7 @@ const Webcontainer = () => {
   }
 
   async function getFileContent(filePath) {
-    console.log("getFileContent");
+    // console.log("getFileContent");
     const file = await webcontainerInstance.fs.readFile(filePath, "utf-8");
     return file;
   }
@@ -1021,7 +1014,7 @@ const Webcontainer = () => {
   }, 0);
 
   function showFileContent(fileName, content, filePath) {
-    console.log("showFileContent");
+    // console.log("showFileContent");
 
     const fileExtension = fileName.split(".").pop().toLowerCase();
     const editorMode = modes.languageExtension[fileExtension];
@@ -1061,7 +1054,7 @@ const Webcontainer = () => {
       textareaEl.session.setMode(`ace/mode/${editorMode}`);
     } else {
       textareaEl.session.setMode(`ace/mode/plain_text`);
-      console.log("else :: " + textareaEl.getSession());
+      // console.log("else :: " + textareaEl.getSession());
     }
 
     textareaEl.getSession().setValue(content);
@@ -1079,14 +1072,14 @@ const Webcontainer = () => {
   }
 
   async function writeToFile(filePath, content) {
-    console.log("writeToFile");
+    // console.log("writeToFile");
     if (activeFile === filePath) {
       await webcontainerInstance.fs.writeFile(filePath, content);
     }
   }
 
   async function removeFiles(directory) {
-    console.log("removeFiles");
+    // console.log("removeFiles");
     if (webcontainerInstance) {
       const files = await webcontainerInstance.fs.readdir(directory, {
         withFileTypes: true,
@@ -1106,7 +1099,7 @@ const Webcontainer = () => {
   }
 
   async function installDependencies(terminal) {
-    console.log("installDependencies");
+    // console.log("installDependencies");
     // Install dependencies
     const installProcess = await webcontainerInstance.spawn("npm", ["install"]);
     installProcess.output.pipeTo(
@@ -1121,7 +1114,7 @@ const Webcontainer = () => {
   }
 
   async function startServer(terminal) {
-    console.log("startServer");
+    // console.log("startServer");
     const serverProcess = await webcontainerInstance.spawn("npm", [
       "run",
       "start",
@@ -1137,7 +1130,7 @@ const Webcontainer = () => {
   }
 
   async function installDependenciesAndStartServer(terminal) {
-    console.log("installDependenciesAndStartServer");
+    // console.log("installDependenciesAndStartServer");
     try {
       // First, install dependencies
       const installD = await installDependencies(terminal);
@@ -1147,7 +1140,7 @@ const Webcontainer = () => {
         await startServer(terminal);
       }
 
-      console.log("Application is ready.");
+      // console.log("Application is ready.");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -1156,23 +1149,23 @@ const Webcontainer = () => {
   let selectedFolder = null; // Initialize a variable to store the selected folder
   //mv
   async function renameWithMv(oldPath, newPath) {
-    console.log("renameWithMv");
+    // console.log("renameWithMv");
     try {
       // Use the webcontainerInstance.spawn method to run the 'mv' command
       const result = await webcontainerInstance.spawn("mv", [oldPath, newPath]);
 
       if (result) {
-        console.log(`Renamed ${oldPath} to ${newPath}`);
+        // console.log(`Renamed ${oldPath} to ${newPath}`);
         return true; // Successful rename
       }
     } catch (error) {
-      console.error(`Error renaming ${oldPath} to ${newPath}:`, error);
+      // console.error(`Error renaming ${oldPath} to ${newPath}:`, error);
       return false; // Rename failed due to an error
     }
   }
 
   async function renameItem(itemPath, newName) {
-    console.log("renameItem");
+    // console.log("renameItem");
     if (itemPath && newName) {
       try {
         const isFolder = itemPath === selectedFolder;
@@ -1218,8 +1211,8 @@ const Webcontainer = () => {
   }
 
   async function deleteFolderRecursive(folderPath) {
-    console.log("deleteFolderRecursive");
-    console.log(`Deleting folder and contents at ${folderPath}`);
+    // console.log("deleteFolderRecursive");
+    // console.log(`Deleting folder and contents at ${folderPath}`);
 
     // Delete the folder itself
     await webcontainerInstance.fs.rm(folderPath, { recursive: true });
@@ -1232,12 +1225,12 @@ const Webcontainer = () => {
   }
 
   function resetFilePath() {
-    console.log("resetFilePath");
+    // console.log("resetFilePath");
     selectedFolder = "/";
   }
 
   async function createFolderFunction() {
-    console.log("createFolderFunction");
+    // console.log("createFolderFunction");
     const folderName = prompt("Enter folder name:");
 
     if (folderName) {
@@ -1300,7 +1293,7 @@ const Webcontainer = () => {
 
   selectedFolder = "/";
   async function createFileFunction() {
-    console.log("createFileFunction");
+    // console.log("createFileFunction");
 
     try {
       // Check if a folder is selected
@@ -1626,6 +1619,18 @@ const Webcontainer = () => {
     // Save the current location.pathname for future comparison
 
     async function webcontainerOnChangeLocation() {
+      
+      if (location.pathname === "/playground") {
+        // Code to be executed when location.pathname is '/playground'
+        if (webcontainerInstance === null) {
+          initializeComponents(selectedLanguageFiles);
+        }
+      }
+    }
+    webcontainerOnChangeLocation();
+
+    return () => {
+      if (location.pathname == "/playground") {
       codeSaved = false;
       setCodeSaving(false);
       titleFromSaveFile = "";
@@ -1640,17 +1645,6 @@ const Webcontainer = () => {
       if (description) {
         description.value = "";
       }
-      if (location.pathname === "/playground") {
-        // Code to be executed when location.pathname is '/playground'
-        if (webcontainerInstance === null) {
-          initializeComponents(selectedLanguageFiles);
-        }
-      }
-    }
-    webcontainerOnChangeLocation();
-
-    return () => {
-      if (location.pathname == "/playground") {
         stopWebContainer();
       }
     };
@@ -1662,9 +1656,9 @@ const Webcontainer = () => {
     async function webcontainerOnChangeLanguage() {
       // console.log("webcontainerOnChangeLanguage");
       const fileTreeStructure = formatedFileTreeStructure();
-      fileTreeStructure
-        .then((result) => console.log(result))
-        .catch((error) => console.log(error));
+      // fileTreeStructure
+        // .then((result) => console.log(result))
+        // .catch((error) => console.log(error));
       await stopWebContainer();
       codeSaved = false;
       setCodeSaving(false);
@@ -1697,6 +1691,11 @@ const Webcontainer = () => {
       prevSelectedLanguage = selectedLanguage;
 
       webcontainerOnChangeLanguage();
+    }
+    return () => {
+      codeSaved = false;
+      setCodeSaving(false);
+
     }
   }, [selectedLanguage]);
 

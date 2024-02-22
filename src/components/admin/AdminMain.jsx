@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import { Container, Grid } from '@mui/material';
 import Dashboard from './Dashboard';
 import User from './User';
+import DeletedUser from './DeletedUser';
+import GetAllUserCodes from './GetAllUserCodes';
 
 const AdminMain = () => {
   const [selectedComponent, setSelectedComponent] = useState('dashboard');
@@ -24,6 +26,8 @@ const AdminMain = () => {
           {/* Render the selected component in the main content area */}
           {selectedComponent === 'dashboard' && <Dashboard />}
           {selectedComponent === 'user' && <User />}
+          {selectedComponent === 'deletedUser' && <DeletedUser />}
+          {selectedComponent === 'getAllCodesByUsername' && <GetAllUserCodes />}
         </Container>
       </Grid>
     </Grid>

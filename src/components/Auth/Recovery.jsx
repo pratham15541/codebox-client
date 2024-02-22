@@ -79,7 +79,7 @@ export default function Recovery() {
       error: "Error while sending OTP",
     });
     sendPromise.then((OTP) => {
-      console.log(OTP);
+      // console.log(OTP);
     });
   }
 

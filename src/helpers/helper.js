@@ -145,6 +145,15 @@ export async function getAllUsers() {
     return { error: "User not exist..." };
   }
 }
+
+export async function getAllDeletedUsers() {
+  try {
+    const { data } = await axios.get("/api/getAllDeletedUsers");
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
 //delete user
 export async function deleteUser(id) {
   try {
@@ -158,9 +167,30 @@ export async function deleteUser(id) {
   }
 }
 
+export async function revertDeletedUser(id) {
+  try {
+    const token = localStorage.getItem("token");
+    const { data } = await axios.patch(`/api/revertDeletedUser?id=${id}`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
 export async function getUserCount() {
   try {
     const { data } = await axios.get("/api/getUsersCount");
+    return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function getDeletedUserCount() {
+  try {
+    const { data } = await axios.get("/api/getDeletedUsersCount");
     return data;
   } catch (error) {
     return { error: "User not exist..." };
@@ -181,11 +211,21 @@ export async function createCode(response) {
     const token = localStorage.getItem("token");
    const decode =  getUsernameFromToken();
   const id = decode.userId;
-    // const id = response.id;
+  const username = decode.username;
+    response.username = username;
     const  data  = await axios.post(`/api/createCode?id=${id}`, response, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function getAllCodesByUsername(username) {
+  try {
+    const { data } = await axios.get(`/api/getAllCodesByUsername`);
+    return data.codesByUser;
   } catch (error) {
     return { error: "User not exist..." };
   }

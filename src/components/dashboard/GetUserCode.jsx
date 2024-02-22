@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getCodesByUserId, deleteCode } from "../../helpers/helper";
+import { getCodesByUserId, deleteCode, getAllCodesByUsername } from "../../helpers/helper";
 import {
   Grid,
   Box,
@@ -130,7 +130,7 @@ const GetUserCode = () => {
                         )
                       }
                     >
-                      Update Code
+                      Update  
                     </Button>
                     <Button onClick={() => handleDelete(code._id)}>
                       Delete
@@ -139,13 +139,19 @@ const GetUserCode = () => {
                 </StyledBox>
               </Grid>
             ))}
-          {!codes.length && (
-            <Grid item xs={12}>
-              <Typography variant="h5" align="center" color="textPrimary">
-                No codes found
-              </Typography>
-            </Grid>
-          )}
+          <Grid
+      container
+      
+      style={{ marginTop: "50px"}}
+    >
+      {!codes.length && (
+        <Grid item xs={12}>
+          <Typography variant="h5" align="center" color="textPrimary">
+            No codes found
+          </Typography>
+        </Grid>
+      )}
+    </Grid>
         </>
       )}
     </Grid>

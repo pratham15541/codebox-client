@@ -64,7 +64,6 @@ const UpdateUserForm = ({ user,onClose,setUsers }) => {
 
         updatePromise
           .then( async () => {
-           console.log("Profile Updated Successfully");
            navigate('/admin', { replace: true });
            const data = await getAllUsers();
             setUsers(data.users);
