@@ -231,6 +231,15 @@ export async function getAllCodesByUsername(username) {
   }
 }
 
+export async function getOnlyDeletedCodesByUsername(username) {
+  try {
+    const { data } = await axios.get(`/api/getOnlyDeletedCodesByUsername`);
+    return data.codesByUser;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
 export async function getAllCodes() {
   try {
     const token = localStorage.getItem("token");
@@ -288,6 +297,18 @@ export async function deleteCode(id) {
       headers: { Authorization: `Bearer ${token}` },
     });
     return data;
+  } catch (error) {
+    return { error: "User not exist..." };
+  }
+}
+
+export async function revertDeletedCode(id) {
+  try {
+    const token = localStorage.getItem("token");
+    const { data } = await axios.patch(`/api/revertDeletedCode?id=${id}`, null, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return data.revertDeletedCode;
   } catch (error) {
     return { error: "User not exist..." };
   }

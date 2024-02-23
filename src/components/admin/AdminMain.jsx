@@ -5,6 +5,7 @@ import Dashboard from './Dashboard';
 import User from './User';
 import DeletedUser from './DeletedUser';
 import GetAllUserCodes from './GetAllUserCodes';
+import GetAllDeletedUserCodes from './GetAllDeletedUserCodes.jsx';
 
 const AdminMain = () => {
   const [selectedComponent, setSelectedComponent] = useState('dashboard');
@@ -28,6 +29,7 @@ const AdminMain = () => {
           {selectedComponent === 'user' && <User />}
           {selectedComponent === 'deletedUser' && <DeletedUser />}
           {selectedComponent === 'getAllCodesByUsername' && <GetAllUserCodes />}
+          {selectedComponent === 'getAllDeletedCodesByUsername' && <GetAllDeletedUserCodes />}
         </Container>
       </Grid>
     </Grid>

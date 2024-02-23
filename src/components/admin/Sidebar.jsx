@@ -74,6 +74,9 @@ const Sidebar = ({ onItemClick }) => {
           <StyledListItem button onClick={() => handleItemClick("getAllCodesByUsername")}>
             <ListItemText primary="Get Codes" />
           </StyledListItem>
+          <StyledListItem button onClick={() => handleItemClick("getAllDeletedCodesByUsername")}>
+            <ListItemText primary="Get Deleted Codes" />
+          </StyledListItem>
         </List>
       </StyledBox>
       {/* </StyledDrawer> */}
