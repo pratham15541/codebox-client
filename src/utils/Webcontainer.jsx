@@ -338,8 +338,10 @@ const Webcontainer = () => {
     const modal = document.getElementById("codeModal");
     if (modal.style.display === "none") {
       modal.style.display = "flex";
-      if (titleFromSaveFile) {
+      if (titleFromSaveFile ) {
         document.getElementById("title").value = titleFromSaveFile;
+      }
+      if(descriptionFromSaveFile != "" || descriptionFromSaveFile !== "No description"){
         document.getElementById("description").value = descriptionFromSaveFile;
       }
     } else {
