@@ -102,26 +102,27 @@ const DeletedUser = () => {
 
   return (
     <Box style={{ wordWrap: "break-word", marginTop: "10px" }}>
-        {filteredUsers.length === 0 ? (
-        <Box>No users available</Box>
-      ) : (
-        <>      <Box
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "10px",
-        }}
-      >
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ marginBottom: "10px", width: "30%" }}
-        />
-      </Box>
-      
+    <Box
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "10px",
+      }}
+    >
+      <TextField
+        label="Search"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ marginBottom: "10px", width: "30%" }}
+      />
+    </Box>
+  
+    {filteredUsers.length === 0 ? (
+      <Box>No users available</Box>
+    ) : (
+      <>
         <DataTable
           columns={columns}
           data={filteredUsers}
@@ -140,10 +141,9 @@ const DeletedUser = () => {
             selectAllRowsItem: true,
           }}
         />
-        </>
-      )}
-      
-    </Box>
+      </>
+    )}
+  </Box>
   );
 };
 
