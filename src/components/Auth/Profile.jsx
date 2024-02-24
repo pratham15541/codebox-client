@@ -15,7 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import UserAvatar from "../../assets/images/avatar.png";
 import useFetch from "../../hooks/fetch.hook";
-import { updateUser } from "../../helpers/helper";
+import { getUserById, getUsernameFromToken, updateUser } from "../../helpers/helper";
 
 //image into base64
 
@@ -23,22 +23,36 @@ export default function Profile() {
   const themeMode = useSelector((state) => state.theme.mode);
   const navigate = useNavigate();
   const serverLink = import.meta.env.VITE_SERVER_DOMAIN;
+  const decode =  getUsernameFromToken();
+  const id = decode.userId
+  const [user, setUser] = React.useState(null);
+  const { isLoading, serverError } = useFetch(`/getUserById/${id}`);
 
-  const [{ isLoading, apiData, serverError, status }] = useFetch();
+  async function getUser() {
+    const user = await getUserById(id);
+    return user;
+  }
+
+  React.useEffect(() => {
+    const userPromise = getUser();
+    userPromise.then((user) => {
+      setUser(user);
+    });
+  }, []);
 
   const [userfile, setUserFile] = React.useState(null);
 
   const formik = useFormik({
     initialValues: {
-      firstName: apiData?.others.firstName || "",
-      lastName: apiData?.others.lastName || "",
-      mobileNumber: apiData?.others.mobileNumber || "",
-      username: apiData?.others.username || "",
-      email: apiData?.others.email || "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      mobileNumber: user?.mobileNumber || "",
+      username: user?.username || "",
+      email: user?.email || "",
       profile:
-        apiData?.others.profile !== undefined &&
-        apiData?.others.profile !== "" &&
-        serverLink + "/" + apiData?.others.profile,
+        user?.profile !== undefined &&
+        user?.profile !== "" &&
+        serverLink + "/" + user?.profile,
     },
     enableReinitialize: true,
     validate: validateProfileForm,
@@ -52,7 +66,7 @@ export default function Profile() {
         formData.append("mobileNumber", values.mobileNumber);
         formData.append("username", values.username);
         formData.append("email", values.email);
-        formData.append("id", apiData?.others._id);
+        formData.append("id", user?._id);
        
         (userfile && URL.createObjectURL(userfile)) && formData.append("profile", userfile);
 
@@ -83,7 +97,7 @@ export default function Profile() {
   // };
 
   // const imageUrl = apiData?.others.profile
-  //   ? (serverLink + "/" + apiData?.others.profile).replace(/\\/g, "/")
+  //   ? (serverLink + "/" + user.profile).replace(/\\/g, "/")
   //   : UserAvatar;
 
   const onUploadAvatar = async (event) => {
