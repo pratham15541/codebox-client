@@ -340,10 +340,15 @@ const Webcontainer = () => {
       modal.style.display = "flex";
       if (titleFromSaveFile ) {
         document.getElementById("title").value = titleFromSaveFile;
+
+        titleFromSaveFile = null;
       }
-      if(descriptionFromSaveFile != "" || descriptionFromSaveFile !== "No description"){
+      if(descriptionFromSaveFile){
         document.getElementById("description").value = descriptionFromSaveFile;
+        descriptionFromSaveFile = null;
       }
+
+
     } else {
       modal.style.display = "none";
     }
@@ -1754,7 +1759,7 @@ const Webcontainer = () => {
           ></textarea>
           <br />
           <button className="action-btn" id="mainSaveCode">
-            {codeSaving == true || codeSaved == true
+            {codeSaving == true && codeSaved == true
               ? "Update Code"
               : "Save Code"}
           </button>
