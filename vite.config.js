@@ -16,11 +16,17 @@ export default defineConfig({
       promiseImportName: i => `__tla_${i}`
     })
   ],
+  preview:{
+    port:'3000',
+    host:true,
+  },
   server: {
     headers: {
       "Cross-Origin-Embedder-Policy": "require-corp",
       "Cross-Origin-Opener-Policy": "same-origin",
     },
+    host:true,
+    origin: "*",
   },
   build: {
     rollupOptions: {
