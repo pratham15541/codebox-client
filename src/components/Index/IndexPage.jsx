@@ -76,7 +76,7 @@ const IndexPage = () => {
           animate={{ opacity: 1, rotateY: 0 }}
           transition={{ duration: 1 }}
         >
-          <Typography variant="h2" align="center" color="HighlightText" gutterBottom>
+          <Typography variant="h2" align="center"  gutterBottom>
             <Typewriter text="Online Code Editor" />
           </Typography>
 
