@@ -13,7 +13,6 @@ import { Link as ReactRouterDomLink, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import UserAvatar from "../../assets/images/avatar.png";
 import useFetch from "../../hooks/fetch.hook";
 import { getUserById, getUsernameFromToken, updateUser } from "../../helpers/helper";
 
@@ -171,7 +170,7 @@ export default function Profile() {
                   src={
                     (userfile && URL.createObjectURL(userfile)) ||
                     formik.values.profile ||
-                    UserAvatar
+                    './avatar-default.png'
                   }
                   loading="lazy"
                   alt="Avatar"

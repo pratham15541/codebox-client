@@ -18,6 +18,7 @@ const DashboardBox = styled(Box)(({ theme }) => ({
   padding: 16,
   boxShadow: theme.shadows[3],
   border: `2px solid ${theme.palette.primary.main}`,
+  marginLeft:20,
 }));
 
 const DashboardText = styled(Typography)(({ theme }) => ({

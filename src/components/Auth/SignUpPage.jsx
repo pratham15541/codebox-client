@@ -14,7 +14,6 @@ import { Link as ReactRouterDomLink, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { ToastContainer, toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import UserAvatar from "../../assets/images/avatar.png";
 import { signup as signUpUser } from "../../helpers/helper";
 
 const SignUp = () => {
@@ -118,7 +117,7 @@ const SignUp = () => {
               >
                 <img
                   onClick={handleAvatarClick}
-                  src={formik.values.profile ? URL.createObjectURL(formik.values.profile) : UserAvatar}
+                  src={formik.values.profile ? URL.createObjectURL(formik.values.profile) : './avatar-default.png'}
                   loading="lazy"
                   alt="Avatar"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}

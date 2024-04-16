@@ -26,12 +26,9 @@ import { prettierPlugins, parsers } from "../constants/prettierPlugins";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import {
-  createCode,
-  getUsernameFromToken,
-  updateCode,
-} from "../helpers/helper";
-import "../assets/css/Modal.css";
+import { styled } from "@mui/system";
+import { createCode, updateCode } from "../helpers/helper";
+// import "../assets/css/Modal.css";
 import { ToastContainer, toast } from "react-toastify";
 
 // Declare variables for DOM elements and WebContainer instance
@@ -102,6 +99,97 @@ git install
 //   console.log(formattedFileTree);
 // }
 // },5000)
+
+const Modal = styled("div")(({ theme }) => ({
+  display: "none",
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(0, 0, 0, 0.8)"
+      : "rgba(255, 255, 255, 0.9)",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 300,
+  transition: "background-color 0.3s ease",
+}));
+
+const ModalContent = styled("div")(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(0, 0, 0, 0.9)"
+      : "rgba(255, 255, 255, 0.95)",
+  padding: "20px",
+  borderRadius: "10px",
+  width: "350px",
+  zIndex: 302,
+  boxShadow: "0 0 20px rgba(0, 0, 0, 0.5)",
+  transition: "background-color 0.3s ease",
+}));
+
+const CloseButton = styled("span")(({ theme }) => ({
+  cursor: "pointer",
+  float: "right",
+  fontSize: "20px",
+  marginTop: "-10px",
+  marginRight: "-10px",
+  color:
+    theme.palette.mode === "dark"
+      ? theme.palette.grey[300]
+      : theme.palette.grey[700],
+  transition: "color 0.3s ease",
+  "&:hover": {
+    color:
+      theme.palette.mode === "dark"
+        ? theme.palette.grey[100]
+        : theme.palette.grey[900],
+  },
+}));
+
+const Input = styled("input")(({ theme }) => ({
+  width: "100%",
+  padding: "10px",
+  marginBottom: "15px",
+  boxSizing: "border-box",
+  backgroundColor: theme.palette.mode === "dark" ? "#333" : "#f5f5f5",
+  color: theme.palette.text.primary,
+  border: "1px solid",
+  borderColor:
+    theme.palette.mode === "dark" ? "transparent" : theme.palette.grey[300],
+  borderRadius: "5px",
+  transition: "background-color 0.3s ease, border-color 0.3s ease",
+}));
+
+const TextArea = styled("textarea")(({ theme }) => ({
+  width: "100%",
+  padding: "10px",
+  marginBottom: "15px",
+  boxSizing: "border-box",
+  backgroundColor: theme.palette.mode === "dark" ? "#333" : "#f5f5f5",
+  color: theme.palette.text.primary,
+  border: "1px solid",
+  borderColor:
+    theme.palette.mode === "dark" ? "transparent" : theme.palette.grey[300],
+  borderRadius: "5px",
+  transition: "background-color 0.3s ease, border-color 0.3s ease",
+}));
+
+const ActionButton = styled("button")(({ theme }) => ({
+  padding: "10px",
+  cursor: "pointer",
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  border: "none",
+  borderRadius: "5px",
+  width: "100%",
+  transition: "background-color 0.3s ease",
+  "&:hover": {
+    backgroundColor: theme.palette.primary.dark,
+  },
+}));
 
 export function setCodeFromSaveFile(
   code,
@@ -181,14 +269,8 @@ const Webcontainer = () => {
     zig: file.zigFiles,
   };
 
-
-  
-
-  selectedLanguageFiles =  codeFromSaveFile || files[selectedLanguage];
+  selectedLanguageFiles = codeFromSaveFile || files[selectedLanguage];
   codeFromSaveFile = null;
- 
-
-
 
   async function fileTreeClickOne(event) {
     // console.log("fileTreeClickOne");
@@ -338,17 +420,15 @@ const Webcontainer = () => {
     const modal = document.getElementById("codeModal");
     if (modal.style.display === "none") {
       modal.style.display = "flex";
-      if (titleFromSaveFile ) {
+      if (titleFromSaveFile) {
         document.getElementById("title").value = titleFromSaveFile;
 
         titleFromSaveFile = null;
       }
-      if(descriptionFromSaveFile){
+      if (descriptionFromSaveFile) {
         document.getElementById("description").value = descriptionFromSaveFile;
         descriptionFromSaveFile = null;
       }
-
-
     } else {
       modal.style.display = "none";
     }
@@ -644,8 +724,6 @@ const Webcontainer = () => {
           });
         });
       }
-
-      
     } catch (error) {
       console.error("Error booting WebContainer:", error);
     }
@@ -1441,6 +1519,8 @@ const Webcontainer = () => {
     }
   }
 
+
+  
   useEffect(() => {
     const waitForElement = (selector, callback) => {
       const element = document.querySelector(selector);
@@ -1576,6 +1656,7 @@ const Webcontainer = () => {
         scrollToTopBtn.removeEventListener("click", scrollToTopFunction);
       }
     };
+
     if (location.pathname == "/playground") {
       waitForElement("#filetree", (fileTreeElement) => {
         waitForElement("#createFolder", (createFolder) => {
@@ -1626,7 +1707,6 @@ const Webcontainer = () => {
     // Save the current location.pathname for future comparison
 
     async function webcontainerOnChangeLocation() {
-      
       if (location.pathname === "/playground") {
         // Code to be executed when location.pathname is '/playground'
         if (webcontainerInstance === null) {
@@ -1638,20 +1718,20 @@ const Webcontainer = () => {
 
     return () => {
       if (location.pathname == "/playground") {
-      codeSaved = false;
-      setCodeSaving(false);
-      titleFromSaveFile = "";
-      descriptionFromSaveFile = "";
-      codeFromSaveFile = null;
-      saveCodeId = null;
-      let title = document.getElementById("title");
-      let description = document.getElementById("description");
-      if (title) {
-        title.value = "";
-      }
-      if (description) {
-        description.value = "";
-      }
+        codeSaved = false;
+        setCodeSaving(false);
+        titleFromSaveFile = "";
+        descriptionFromSaveFile = "";
+        codeFromSaveFile = null;
+        saveCodeId = null;
+        let title = document.getElementById("title");
+        let description = document.getElementById("description");
+        if (title) {
+          title.value = "";
+        }
+        if (description) {
+          description.value = "";
+        }
         stopWebContainer();
       }
     };
@@ -1659,13 +1739,14 @@ const Webcontainer = () => {
     // Cleanup function to update previousLocation after the component renders
   }, [location]);
 
-  useEffect(() => {         
+  useEffect(() => {
+    setIsLoading(true);
     async function webcontainerOnChangeLanguage() {
       // console.log("webcontainerOnChangeLanguage");
       const fileTreeStructure = formatedFileTreeStructure();
       // fileTreeStructure
-        // .then((result) => console.log(result))
-        // .catch((error) => console.log(error));
+      // .then((result) => console.log(result))
+      // .catch((error) => console.log(error));
       await stopWebContainer();
       codeSaved = false;
       setCodeSaving(false);
@@ -1682,7 +1763,6 @@ const Webcontainer = () => {
         description.value = "";
       }
       if (selectedLanguageFiles && webcontainerInstance === null) {
-       
         await initializeComponents(selectedLanguageFiles);
       } else {
         // console.log("selectedLanguageFiles is null");
@@ -1702,71 +1782,62 @@ const Webcontainer = () => {
     return () => {
       codeSaved = false;
       setCodeSaving(false);
-
-    }
+    };
   }, [selectedLanguage]);
 
   return (
     <>
-      {isLoading &&
-        location.pathname === "/playground" &&
-        webcontainerInstance === null && (
-          <>
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              height="100vh"
-              width="100%"
-              position="fixed"
-              top={0}
-              left={0}
-              zIndex={999}
-              style={{ display: isLoading ? "flex" : "none" }}
-            >
-              <Box textAlign="center">
-                <CircularProgress color="secondary" />
-                <Typography variant="subtitle1" color="textSecondary" mt={2}>
-                  Loading...
-                </Typography>
-              </Box>
+      {isLoading && location.pathname === "/playground" && (
+        <>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100vh"
+            width="100%"
+            position="fixed"
+            top={0}
+            left={0}
+            zIndex={999}
+            style={{ display: isLoading ? "flex" : "none" }}
+          >
+            <Box textAlign="center">
+              <CircularProgress color="secondary" />
+              <Typography variant="subtitle1" color="textSecondary" mt={2}>
+                Loading...
+              </Typography>
             </Box>
-          </>
-        )}
+          </Box>
+        </>
+      )}
 
-      {
-        location.pathname === "/playground" && (
-          <div id="codeModal" className="modal">
-        <div className="modal-content">
-          <span style={{ cursor: "pointer", float: "right" }} id="closeModal">
-            &times;
-          </span>
-          <label htmlFor="title">Title: </label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            placeholder="Title"
-            required
-          />
-          <br />
-          <label htmlFor="description">Description: </label>
-          <textarea
-            id="description"
-            rows="4"
-            cols="50"
-            placeholder="Description (Optional)"
-          ></textarea>
-          <br />
-          <button className="action-btn" id="mainSaveCode">
-            {codeSaving == true && codeSaved == true
-              ? "Update Code"
-              : "Save Code"}
-          </button>
-        </div>
-      </div>
-        )
-      }
+      {location.pathname === "/playground" && (
+        <Modal id="codeModal">
+          <ModalContent>
+            <CloseButton id="closeModal">&times;</CloseButton>
+            <label htmlFor="title">Title: </label>
+            <Input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="Title"
+              required
+            />
+            <br />
+            <label htmlFor="description">Description: </label>
+            <TextArea
+              id="description"
+              rows="4"
+              cols="50"
+              placeholder="Description (Optional)"
+            />
+            <br />
+            <ActionButton id="mainSaveCode">
+              {codeSaving && codeSaved ? "Update Code" : "Save Code"}
+            </ActionButton>
+          </ModalContent>
+        </Modal>
+      )}
 
       <ToastContainer
         autoClose={2000}

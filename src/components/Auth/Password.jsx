@@ -17,7 +17,6 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { MdVisibility } from "react-icons/md";
 import { MdVisibilityOff } from "react-icons/md";
 import useFetch from "../../hooks/fetch.hook";
-import UserAvatar from "../../assets/images/avatar.png";
 import { login } from "../../helpers/helper";
 
 function validateEmailAndPassword(values) {
@@ -88,7 +87,7 @@ export default function SignIn() {
   const handleTogglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
-  const imageUrl =apiData?.others.profile ? (serverLink + '/' + apiData?.others.profile).replace(/\\/g, '/') : UserAvatar;
+  const imageUrl =apiData?.others.profile ? (serverLink + '/' + apiData?.others.profile).replace(/\\/g, '/') : './avatar-default.png';
 
   if (isLoading) {
     return <h1 className="text-2xl font-bold">Loading...</h1>;

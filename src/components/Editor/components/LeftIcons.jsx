@@ -90,6 +90,8 @@ const LeftIcons = ({ openFiletree, closeFiletree }) => {
       className="sidebar"
       spacing={2}
       alignItems="center"
+      width="100%"
+      padding="0"
       sx={{ height: "87.5vh", marginTop: "1px" }}
     >
       {/* Top Icons */}

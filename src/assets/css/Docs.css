@@ -1,0 +1,78 @@
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Center the content */
+.img-title {
+  display: grid;
+  place-items: center;
+}
+
+.img-div {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+/* Style for headings */
+ .img-span  {
+  font-weight: bold;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  text-decoration: underline;
+  margin: 10px 0px;
+}
+
+.images {
+  display: block;
+  
+  margin: 0 auto;
+  border-radius: 8px;
+  border: .5px solid #F4F2F7;
+  width: 70%;
+  animation: fadeIn 1s ease-in-out;
+ margin-bottom: 20px;
+}
+.sidebar {
+  
+  margin-top: 20px;
+  width: 23%;
+  float: left;
+  padding: 20px;
+  overflow-y: auto; /* Enable vertical scrollbar if content exceeds height */
+  height: 90vh; /* Ensure content takes full height of viewport */
+}
+
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 24px;
+}
+
+.sidebar-content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar-content ul li {
+  cursor: pointer;
+  padding: 10px;
+  transition: background-color 0.3s;
+}
+
+
+.content {
+  margin-top: 20px;
+  width: 75%;
+  float: left;
+  overflow-y: auto; /* Enable vertical scrollbar if content exceeds height */
+  height: 90vh; /* Ensure content takes full height of viewport */
+}
+

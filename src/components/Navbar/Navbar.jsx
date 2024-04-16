@@ -29,7 +29,6 @@ import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
 import "../../assets/css/Navbar.css";
 import useFetch from "../../hooks/fetch.hook";
-import UserAvatar from "../../assets/images/avatar.png";
 import { getUsernameFromToken } from "../../helpers/helper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthorizeUser } from "../../middleware/auth";
@@ -104,7 +103,7 @@ const Navbar = () => {
         setImageUrl(
           data?.others.profile
             ? (serverLink + "/" + data?.others.profile).replace(/\\/g, "/")
-            : UserAvatar
+            : './avatar-default.png'
         );
       }
       // console.log(userdata);
@@ -207,7 +206,7 @@ const Navbar = () => {
             </Grid>):(null)
            }
 
-            {/* <Grid item>
+            <Grid item>
               <Link
                 className="width-increasing-animation"
                 to="/docs"
@@ -224,7 +223,7 @@ const Navbar = () => {
                   Docs
                 </Typography>
               </Link>
-            </Grid> */}
+            </Grid>
 
             <Grid item>
               <Link

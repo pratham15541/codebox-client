@@ -11,7 +11,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ToastContainer, toast } from "react-toastify";
 import { updateUser } from "../../helpers/helper";
-import UserAvatar from "../../assets/images/avatar.png";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useFormik } from "formik";
@@ -130,7 +129,7 @@ const UpdateUserForm = ({ user,onClose,setUsers }) => {
               src={
                 (userfile && URL.createObjectURL(userfile)) ||
                 formik.values.profile ||
-                UserAvatar
+                './avatar-default.png'
               }
               loading="lazy"
               alt="Avatar"

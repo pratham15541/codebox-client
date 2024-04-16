@@ -13,6 +13,7 @@ import { setCodeFromSaveFile } from "../../utils/Webcontainer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSelectedLanguage } from "../../store/slices/languageSelectorSlice";
+import Swal from 'sweetalert2';
 
 const GetUserCode = () => {
   const theme = useTheme();
@@ -38,9 +39,24 @@ const GetUserCode = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteCode(id);
-      // After successful deletion, refetch the data
-      await fetchData();
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      });
+      if (result.isConfirmed) {
+        await deleteCode(id);
+        await fetchData();
+        Swal.fire(
+          'Deleted!',
+          'Your code has been deleted.',
+          'success'
+        )
+      }
     } catch (error) {
       console.error("Error deleting code:", error);
     }
