@@ -1,4 +1,4 @@
-![GraciasGIF](https://github.com/user-attachments/assets/4bdea058-8d1c-48cf-8ddb-ff139e1dce9c)# 🌟 **Online Code Editor & Compiler**
+# 🌟 **Online Code Editor & Compiler**
 
 🚀 Build, compile, and run code directly in your browser! This project combines the power of **React**, **Node.js**, **Express**, **MongoDB**, and **WebContainer** to create a seamless, feature-rich online coding platform.  
 
