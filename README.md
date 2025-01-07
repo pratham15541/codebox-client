@@ -1,4 +1,4 @@
-# 🌟 **Online Code Editor & Compiler**
+![GraciasGIF](https://github.com/user-attachments/assets/4bdea058-8d1c-48cf-8ddb-ff139e1dce9c)# 🌟 **Online Code Editor & Compiler**
 
 🚀 Build, compile, and run code directly in your browser! This project combines the power of **React**, **Node.js**, **Express**, **MongoDB**, and **WebContainer** to create a seamless, feature-rich online coding platform.  
 
@@ -32,17 +32,6 @@
 
 ---
 
-## **📂 Folder Structure**
-
-```plaintext
-├── client/             # React Frontend
-│   ├── src/
-│   ├── public/
-├── server/             # Node.js Backend
-│   ├── routes/
-│   ├── models/
-├── .env                # Environment Variables
-├── package.json
-├── README.md
+Support me and give ⭐ and ❤️. @pratham15541
 
 
