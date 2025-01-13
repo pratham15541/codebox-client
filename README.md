@@ -2,8 +2,9 @@
 
 🚀 Build, compile, and run code directly in your browser! This project combines the power of **React**, **Node.js**, **Express**, **MongoDB**, and **WebContainer** to create a seamless, feature-rich online coding platform.  
 
-![Code Editor Showcase](https://i.ibb.co/ZLKryXv/Screenshot-1.png)  
-[![Watch the Demo](https://youtu.be/PEw1Kv74EAw)  
+![Code Editor Showcase](https://i.ibb.co/ZLKryXv/Screenshot-1.png) 
+# Demo Video
+[![Watch the video](https://img.youtube.com/vi/PEw1Kv74EAw/default.jpg)](https://youtu.be/PEw1Kv74EAw)
 
 ---
 
