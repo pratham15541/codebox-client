@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import SEO from "../seo/Seo";
 import Editor from "../components/Editor/Editor";
-import { useLocation } from "react-router-dom";
 import Webcontainer from "../utils/Webcontainer";
+import AiChatWindow from "../components/Chat/AiChatWindow";
 
 const Playground = () => {
   return (
@@ -15,6 +15,7 @@ const Playground = () => {
       />
       <Webcontainer />
       <Editor />
+      <AiChatWindow />
     </>
   );
 };

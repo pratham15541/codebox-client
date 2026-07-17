@@ -47,20 +47,32 @@ export async function signup(credentials) {
 
     const username = credentials.get("username");
     const email = credentials.get("email");
-  
-    // send the email
+
+    // Welcome email is best-effort — do not fail registration if mail server rejects
     if (status === 201) {
-      await axios.post("/api/signupMail", {
-        username,
-        userEmail: email,
-        text: message,
-        subject: "Welcome to CodeBox!",
-      });
+      try {
+        await axios.post("/api/signupMail", {
+          username,
+          userEmail: email,
+          text: message,
+          subject: "Welcome to CodeBox!",
+        });
+      } catch (emailError) {
+        console.warn(
+          "Welcome email failed:",
+          emailError?.response?.data?.error || emailError.message
+        );
+      }
     }
 
-    return Promise.resolve(message);
+    return message;
   } catch (error) {
-    return Promise.reject({ error });
+    const serverMessage =
+      error?.response?.data?.error ||
+      error?.response?.data?.message ||
+      error.message ||
+      "Registration failed";
+    return Promise.reject(serverMessage);
   }
 }
 
@@ -312,4 +324,46 @@ export async function revertDeletedCode(id) {
   } catch (error) {
     return { error: "User not exist..." };
   }
+}
+
+function authHeaders() {
+  const token = localStorage.getItem("token");
+  return { Authorization: `Bearer ${token}` };
+}
+
+export async function sendChatMessage({ message, codeId, sessionId, codeSnippet, language }) {
+  try {
+    const { data } = await axios.post(
+      "/api/chat",
+      { message, codeId, sessionId, codeSnippet, language },
+      { headers: authHeaders() }
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function indexCodeForChat(codeId) {
+  const { data } = await axios.post(
+    "/api/chat/index",
+    { codeId },
+    { headers: authHeaders() }
+  );
+  return data;
+}
+
+export async function getChatSessions() {
+  const { data } = await axios.get("/api/chat/sessions", {
+    headers: authHeaders(),
+  });
+  return data;
+}
+
+export async function getChatMessages(sessionId) {
+  const { data } = await axios.get("/api/chat/messages", {
+    params: { sessionId },
+    headers: authHeaders(),
+  });
+  return data;
 }

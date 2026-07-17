@@ -28,6 +28,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import { createCode, updateCode } from "../helpers/helper";
+import { setActiveCodeId } from "./playgroundState";
 // import "../assets/css/Modal.css";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -204,6 +205,7 @@ export function setCodeFromSaveFile(
   descriptionFromSaveFile = description;
   codeSaved = true;
   saveCodeId = id;
+  setActiveCodeId(id);
 }
 
 const Webcontainer = () => {
@@ -482,6 +484,7 @@ const Webcontainer = () => {
 
         if (!codeSaved) {
           saveCodeId = res.data.userCode._id;
+          setActiveCodeId(saveCodeId);
           codeSaved = true;
           setCodeSaving(true);
         }
@@ -1724,6 +1727,7 @@ const Webcontainer = () => {
         descriptionFromSaveFile = "";
         codeFromSaveFile = null;
         saveCodeId = null;
+        setActiveCodeId(null);
         let title = document.getElementById("title");
         let description = document.getElementById("description");
         if (title) {
@@ -1754,6 +1758,7 @@ const Webcontainer = () => {
       descriptionFromSaveFile = "";
       codeFromSaveFile = null;
       saveCodeId = null;
+      setActiveCodeId(null);
       let title = document.getElementById("title");
       let description = document.getElementById("description");
       if (title) {

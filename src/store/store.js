@@ -11,6 +11,7 @@ import muiDataReducer from './slices/muiDataSlice'
 import codeCommandReducer from './slices/codeCommandSlice'
 import authReducer from './slices/userAuthSlice'
 import tokenReducer from './slices/userTokenSlice'
+import chatReducer from './slices/chatSlice'
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     muiData: muiDataReducer,
     auth:authReducer,
     token:tokenReducer,
+    chat: chatReducer,
   },
 });
 

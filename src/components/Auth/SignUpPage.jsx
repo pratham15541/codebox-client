@@ -36,18 +36,20 @@ const SignUp = () => {
       formData.append("username", values.username);
       formData.append("email", values.email);
       formData.append("password", values.password);
-      formData.append("profile", values.profile);
+      if (values.profile) {
+        formData.append("profile", values.profile);
+      }
 
-      let registerPromise = signUpUser(formData);
+      const registerPromise = signUpUser(formData);
       toast.promise(registerPromise, {
         pending: "Registering...",
         success: "Registered successfully",
-        error: "Error during registration",
+        error: (err) =>
+          typeof err === "string" ? err : "Error during registration",
       });
 
       registerPromise
         .then(() => {
-          
           setTimeout(() => {
             navigate("/signin");
           }, 2000);
